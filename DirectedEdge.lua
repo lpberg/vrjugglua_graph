@@ -1,6 +1,6 @@
 
 -- Set up __index table for DirectedEdge metatable
-local DirectedEdgeIndex = { isedge = true}
+local DirectedEdgeIndex = { isedge = true }
 
 -- DirectedEdge metatable
 local DEMT = {
@@ -25,28 +25,5 @@ end
 DirectedEdge = function(source, destination)
 	-- setmetatable returns the table it is given after it modifies it by setting the metatable
 	-- so this is a commonly-seen pattern
-	local self = setmetatable({}, DEMT)
-
-	-- Be able to take in either names or actual edges.
-	-- A little bit more complex but makes the addRandomEdge and similar easier.
-	if type(source) == "string" then
-		self.srcname = source
-	else
-		self.src = source
-		self.srcname = source.name
-	end
-
-	if type(destination) == "string" then
-		self.destname = destination
-	else
-		self.dest = destination
-		self.destname = destination.name
-	end
-
-	return self
-
-	--[[ The older, simpler definition that required source and destination to be string names is:
 	return setmetatable({srcname = source, destname = destination}, DEMT)
-	]]
-
 end

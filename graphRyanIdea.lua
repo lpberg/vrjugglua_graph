@@ -58,13 +58,11 @@ function addRandomEdge(graph)
 	local toNum = math.random(1, n)
 	if fromNum ~= toNum then
 		graph:addEdges{
-			DirectedEdge(graph.nodes[fromNum], graph.nodes[toNum])
-			--[[ we could have also done this by name without modifying the DE constructor, like this:
+			-- Our simple DirectedEdge constructor wants node names, so we'll get those names from the nodes
 			DirectedEdge(graph.nodes[fromNum].name, graph.nodes[toNum].name)
-
-			A few extra table lookups but no big deal in the long run.
-			
-			Actually, that's probably better since it significantly reduces code size without reducing readability
+			--[[
+			if that's a bit much to follow, remember, that line is equivalent to:
+			DirectedEdge(graph["nodes"][fromNum]["name"], graph["nodes"][toNum]["name"])
 			]]
 		}
 	else
