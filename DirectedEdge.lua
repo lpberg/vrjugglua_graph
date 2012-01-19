@@ -1,3 +1,6 @@
+local DEDebug = function(...)
+	print("DirectedEdge:", ...)
+end
 
 -- Set up __index table for DirectedEdge metatable
 local DirectedEdgeIndex = { isedge = true }
