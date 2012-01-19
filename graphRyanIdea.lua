@@ -2,9 +2,7 @@
 require("Actions")
 require("getScriptFilename")
 vrjLua.appendToModelSearchPath(getScriptFilename())
---dofile(vrjLua.findInModelSearchPath([[drawFunctions.lua]]))
---dofile(vrjLua.findInModelSearchPath([[graphFunctions.lua]]))
-dofile(vrjLua.findInModelSearchPath([[simpleLightsGraph.lua]]))
+--dofile(vrjLua.findInModelSearchPath([[simpleLightsGraph.lua]]))
 function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
 
 -- I split stuff up since it got hard to read once I commented it
