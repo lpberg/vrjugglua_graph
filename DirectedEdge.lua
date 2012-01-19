@@ -7,9 +7,10 @@ local DEMT = {
 	__index = DirectedEdgeIndex
 }
 
--- OK, now I'm just showing off, so you can print a DirectedEdge
+-- OK, now I'm just showing off, so you can print a DirectedEdge, but
+-- notice how I'm converting to string here...
 function DEMT:__tostring()
-	return ("[edge '%s->%s']"):format(self.srcname, self.destname)
+	return ("DirectedEdge([[%s]], [[%s]])"):format(self.srcname, self.destname)
 end
 
 function DirectedEdgeIndex:createOSG()
