@@ -10,6 +10,7 @@ function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
 runfile("DirectedEdge.lua")
 runfile("GraphNode.lua")
 runfile("Graph.lua")
+runfile("Cylinder.lua")
 
 -- A graph is G=(V, E)
 g = Graph(

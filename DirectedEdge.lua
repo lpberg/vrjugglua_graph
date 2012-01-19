@@ -20,10 +20,21 @@ function DirectedEdgeIndex:createOSG()
 	-- TODO use self.src and self.dest and set self.osg
 	-- Might want to do the minimum necessary here and then just call self:updateOSG()
 	-- to avoid duplication
+	assert(self.osg == nil, "Only call this createOSG once!")
 	self.osg = Group{}
+	self:updateOSG()
 end
 function DirectedEdgeIndex:updateOSG()
 	-- TODO update if the xforms of the ends have changed
+	if self.srcpos == self.src.position and self.destpos == self.dest.position then
+		-- nothing to do here!
+		DEDebug "updateOSG had nothing to do"
+		return
+	end
+	self.srcpos = self.src.position
+	self.destpos = self.dest.position
+	self.osg.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)))
+	DEDebug "updateOSG is done!"
 end
 
 DirectedEdge = function(source, destination)
