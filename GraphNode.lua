@@ -1,5 +1,32 @@
 
 local GraphNodeIndex = { isgraphnode = true}
+local GNMT = { __index = GraphNodeIndex }
+
+GraphNodeIndex.tostring_keys_to_skip = {
+	["name"] = true, -- gets used elsewhere
+	["edges"] = true,
+	["parents"] = true,
+	["children"] = true,
+	["osg"] = true,
+	["osgsphere"] = true,
+	["tostring_keys_to_skip"] = true
+}
+
+function GNMT:__tostring()
+	local data = {}
+	for k, v in pairs(self) do
+		if self.tostring_keys_to_skip[k] == nil then
+			table.insert(data, table.concat{"[ [[", k, "]] ] = [[", tostring(v), "]]"})
+		end
+	end
+	return table.concat{
+		"[ [[",
+		self.name,
+		"]] ] = GraphNode{ ",
+		table.concat(data, ", "),
+		"}"
+		}
+end
 
 function GraphNodeIndex:createOSG()
 	self.osgsphere = Sphere{
@@ -18,7 +45,6 @@ function GraphNodeIndex:updateOSG()
 	-- and call update on all edges.
 end
 
-local GNMT = { __index = GraphNodeIndex }
 GraphNode = function(node)
 	-- default value
 	node.radius = node.radius or 0.125

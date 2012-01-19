@@ -87,4 +87,9 @@ for i, node in ipairs(g.nodes) do
 	print( ("Node named '%s' (internal ID %d), has %d parents and %d children"):format(node.name, i, #(node.parents), #(node.children)) )
 end
 
+-- Display the nodes kind of like how we did the edges - not complete, of course, but the idea is there.
+for _, node in ipairs(g.nodes) do
+	print(node) -- uses the __tostring metamethod
+end
+
 ]]
