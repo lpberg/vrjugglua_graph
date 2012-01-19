@@ -1,6 +1,7 @@
 --See http://www.lua.org/pil/16.html and http://www.lua.org/pil/16.1.html for more information
 require("Actions")
 require("getScriptFilename")
+require("strict")
 vrjLua.appendToModelSearchPath(getScriptFilename())
 --dofile(vrjLua.findInModelSearchPath([[simpleLightsGraph.lua]]))
 function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
