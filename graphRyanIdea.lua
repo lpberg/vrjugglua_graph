@@ -6,9 +6,9 @@ vrjLua.appendToModelSearchPath(getScriptFilename())
 function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
 
 -- I split stuff up since it got hard to read once I commented it
-runfile("rpgraph/DirectedEdge.lua")
-runfile("rpgraph/GraphNode.lua")
-runfile("rpgraph/Graph.lua")
+runfile("DirectedEdge.lua")
+runfile("GraphNode.lua")
+runfile("Graph.lua")
 
 -- A graph is G=(V, E)
 g = Graph(
