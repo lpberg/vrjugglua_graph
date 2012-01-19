@@ -32,11 +32,6 @@ RelativeTo.World:addChild(g.osg.root)
 -- Some fun stuff follows here.
 
 -- Add random node.
---[[ Example usage:
-for i=1,5 do
-	addRandomNode(g)
-end
-]]
 do
 	-- putting this in a block so you can't get to randomNodeNum from outside
 	-- essentially just creating a closure
@@ -70,9 +65,26 @@ function addRandomEdge(graph)
 	end
 end
 
---[[ More things you can do:
+--[[ Some fun things you can try
 
+-- Add some random nodes
+for i=1,5 do
+	addRandomNode(g)
+end
+
+-- Add some random edges
+for i=1,5 do
+	addRandomEdge(g)
+end
+
+-- Display the edges (in a particular way - notice how this could be useful?)
 for _, e in ipairs(g.edges) do
 	print(e) -- uses the __tostring metamethod
 end
+
+-- Display some info about the nodes.
+for i, node in ipairs(g.nodes) do
+	print( ("Node named '%s' (internal ID %d), has %d parents and %d children"):format(node.name, i, #(node.parents), #(node.children)) )
+end
+
 ]]
