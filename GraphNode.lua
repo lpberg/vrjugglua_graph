@@ -33,13 +33,29 @@ function GraphNodeIndex:createOSG()
 		radius = self.radius,
 		position = {0, 0, 0}
 	}
+	
+	self.indicators = osg.Switch()
+	self.indicators:addChild(RedIndicatorSphere())
+	self.indicators:setValue(0,false)
+	
+	
 	self.osg = Transform{
 		position = self.position,
-		self.osgsphere
+		self.osgsphere,
+		self.indicators,
 	}
+end
+function GraphNodeIndex:highlight(val,childNum)
+	if childNum == nil then childNum = 0 end
+	self.indicators:setValue(childNum,val)
 end
 
 function GraphNodeIndex:updateOSG()
+	-- nodePos = self.position
+	-- xformPos = self.osg:getPosition()
+	-- if ((nodePos[1] ~= xformPos:x()) or (nodePos[2] ~= xformPos:y()) or (nodePos[3] ~= xformPos:z())) then
+		-- self.osg.setPosition(osg.Vec3(unpack(self.position)))
+	-- end
 	-- TODO
 	-- if self.position is different than self.xform:getPosition, update
 	-- and call update on all edges.
