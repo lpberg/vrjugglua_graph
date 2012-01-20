@@ -62,7 +62,7 @@ end
 			edges = {},
 			osg = {
 				noderoot = Group{},
-				edgeroot = Group{}
+				edgeroot = Group{},
 			}
 		},
 		GMT
