@@ -46,7 +46,7 @@ function GraphNodeIndex:createOSG()
 	}
 end
 function GraphNodeIndex:highlight(val,childNum)
-	if childNum == nil then childNum = 0 end
+	childNum = childNum or 0
 	self.indicators:setValue(childNum,val)
 end
 
