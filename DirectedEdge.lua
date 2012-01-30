@@ -21,11 +21,6 @@ function DirectedEdgeIndex:createOSG()
 	-- Might want to do the minimum necessary here and then just call self:updateOSG()
 	-- to avoid duplication
 	assert(self.osg == nil, "Only call this createOSG once!")
-	self.osg = Group{}
-	self:updateOSG()
-end
-function DirectedEdgeIndex:updateOSG()
-	-- TODO update if the xforms of the ends have changed
 	if self.srcpos == self.src.position and self.destpos == self.dest.position then
 		-- nothing to do here!
 		DEDebug "updateOSG had nothing to do"
@@ -33,8 +28,32 @@ function DirectedEdgeIndex:updateOSG()
 	end
 	self.srcpos = self.src.position
 	self.destpos = self.dest.position
-	self.osg.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)))
+
+	self.osgcylinder =  CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)))
+	
+	self.indicators = osg.Switch()
+	self.indicators:addChild(YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos))))
+	self.osg = Transform{
+		self.osgcylinder,
+		self.indicators,
+	}
+	
+
+	--self:updateOSG()
+end
+-- g.edges[1].indicators:setAllChildrenOff()
+-- g.edges[2].indicators:setAllChildrenOff()
+-- g.edges[3].indicators:setAllChildrenOff()
+-- g.edges[4].indicators:setAllChildrenOff()
+
+
+function DirectedEdgeIndex:updateOSG()
+	-- TODO update if the xforms of the ends have changed
 	DEDebug "updateOSG is done!"
+end
+function DirectedEdgeIndex:highlight(val,childNum)
+	childNum = childNum or 0
+	self.indicators:setValue(childNum,val)
 end
 
 DirectedEdge = function(source, destination)
