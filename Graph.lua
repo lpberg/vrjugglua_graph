@@ -38,7 +38,16 @@ function GraphPrototype:getPathAsEdgeTable(args)
 	end
 	return edgeTable
 end
-
+function GraphPrototype:disableHighlighting()
+	for _, edge in ipairs(self.edges) do
+		edge:highlight(false)
+	end
+end
+function GraphPrototype:highlightPath(edgeTable)
+	for _, edge in ipairs(edgeTable) do
+		edge:highlight(true)
+	end
+end
 function GraphPrototype:getEdge(srcname,destname)
 	for _, edge in ipairs(self.edges) do
 		if edge.srcname == srcname and edge.destname == destname then
