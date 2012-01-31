@@ -26,6 +26,22 @@ function GraphPrototype:addNodes(nodes)
 		print("Graph: Added GraphNode", node.name)
 	end
 end
+function GraphPrototype:getEdge(srcname,destname)
+	for _, edge in ipairs(self.edges) do
+		if edge.srcname == srcname and edge.destname == destname then
+			return edge
+		end
+	end
+	error("Edge not found in graph", 2)
+end
+function GraphPrototype:getNode(nodename)
+	for _, node in ipairs(self.nodes) do
+		if node.name == nodename then
+			return node
+		end
+	end
+	error("Node:"..nodename.." not found in graph", 2)
+end
 
 function GraphPrototype:addEdges(edges)
 	for _, edge in ipairs(edges) do
