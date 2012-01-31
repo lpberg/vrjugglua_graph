@@ -58,7 +58,6 @@ YellowCylinderFromHereToThere = function(here, there)
 		local xform = Transform{
 			geode,
 		}
-		--TransparentObject(xform)
 		return xform
 	end
 	
@@ -71,6 +70,7 @@ YellowCylinderFromHereToThere = function(here, there)
 	local newQuat = osg.Quat() -- Isn't there a static method like osg.Quat.rotate()? TODO
 	newQuat:makeRotate(osg.Vec3(0,0,1),osg.Vec3(newVec:x(),newVec:y(),newVec:z()))
 	xform:setAttitude(newQuat)
+	
 	return xform
 end
 
