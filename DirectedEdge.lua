@@ -31,27 +31,23 @@ function DirectedEdgeIndex:createOSG()
 	
 	self.indicators = osg.Switch()
 	self.indicators:addChild(YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos))))
+	self.indicators:setAllChildrenOff()
 	self.osg = Transform{
 		self.osgcylinder,
 		self.indicators,
 	}
-	
-
-	--self:updateOSG()
 end
--- g.edges[1].indicators:setAllChildrenOff()
--- g.edges[2].indicators:setAllChildrenOff()
--- g.edges[3].indicators:setAllChildrenOff()
--- g.edges[4].indicators:setAllChildrenOff()
-
 
 function DirectedEdgeIndex:updateOSG()
 	-- TODO update if the xforms of the ends have changed
 	DEDebug "updateOSG is done!"
 end
-function DirectedEdgeIndex:highlight(val,childNum)
-	childNum = childNum or 0
-	self.indicators:setValue(childNum,val)
+function DirectedEdgeIndex:highlight(val)
+	if val then
+		self.indicators:setAllChildrenOn()
+	else
+		self.indicators:setAllChildrenOff()
+	end
 end
 
 DirectedEdge = function(source, destination)
