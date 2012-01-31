@@ -17,9 +17,7 @@ function DEMT:__tostring()
 end
 
 function DirectedEdgeIndex:createOSG()
-	-- TODO use self.src and self.dest and set self.osg
-	-- Might want to do the minimum necessary here and then just call self:updateOSG()
-	-- to avoid duplication
+
 	assert(self.osg == nil, "Only call this createOSG once!")
 	if self.srcpos == self.src.position and self.destpos == self.dest.position then
 		-- nothing to do here!
