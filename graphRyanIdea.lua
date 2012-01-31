@@ -30,40 +30,41 @@ g = Graph(
 
 RelativeTo.World:addChild(g.osg.root)
 -- Some fun stuff follows here.
-
+--g:getPathAsEdgeTable(arg)
+e = g:getEdge("one","two")
 -- Add random node.
-do
+-- do
 	-- putting this in a block so you can't get to randomNodeNum from outside
 	-- essentially just creating a closure
-	local randomNodeNum = 1
+	-- local randomNodeNum = 1
 
 	-- addRandomNode is a global variable so it's accessible from outside this extra do-end block
-	function addRandomNode(graph)
-		local nodename = ("random_%d"):format(randomNodeNum)
-		graph:addNodes{
-			[nodename] = GraphNode{position = {math.random(-2,2), math.random(-2,2), math.random(-2,2)}}
-		}
-		randomNodeNum = randomNodeNum + 1
-	end
-end
+	-- function addRandomNode(graph)
+		-- local nodename = ("random_%d"):format(randomNodeNum)
+		-- graph:addNodes{
+			-- [nodename] = GraphNode{position = {math.random(-2,2), math.random(-2,2), math.random(-2,2)}}
+		-- }
+		-- randomNodeNum = randomNodeNum + 1
+	-- end
+-- end
 
-function addRandomEdge(graph)
-	local n = #(graph.nodes)
-	local fromNum = math.random(1, n)
-	local toNum = math.random(1, n)
-	if fromNum ~= toNum then
-		graph:addEdges{
+-- function addRandomEdge(graph)
+	-- local n = #(graph.nodes)
+	-- local fromNum = math.random(1, n)
+	-- local toNum = math.random(1, n)
+	-- if fromNum ~= toNum then
+		-- graph:addEdges{
 			-- Our simple DirectedEdge constructor wants node names, so we'll get those names from the nodes
-			DirectedEdge(graph.nodes[fromNum].name, graph.nodes[toNum].name)
+			-- DirectedEdge(graph.nodes[fromNum].name, graph.nodes[toNum].name)
 			--[[
 			if that's a bit much to follow, remember, that line is equivalent to:
 			DirectedEdge(graph["nodes"][fromNum]["name"], graph["nodes"][toNum]["name"])
 			]]
-		}
-	else
-		print "Whoops, rolled the same number twice. Not actually adding an edge."
-	end
-end
+		-- }
+	-- else
+		-- print "Whoops, rolled the same number twice. Not actually adding an edge."
+	-- end
+-- end
 
 --[[ Some fun things you can try
 

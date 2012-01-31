@@ -26,6 +26,20 @@ function GraphPrototype:addNodes(nodes)
 		print("Graph: Added GraphNode", node.name)
 	end
 end
+
+function GraphPrototype:getPathAsEdgeTable(args)
+	local edgeTable= {}
+	for k,v in ipairs(args) do
+		if args[k+1] ~= nil then
+			print(args[k],args[k+1])
+			e = self.getEdge(args[k],args[k+1])
+			
+			edgeTable[k] = e
+		end
+	end
+	return edgeTable
+end
+
 function GraphPrototype:getEdge(srcname,destname)
 	for _, edge in ipairs(self.edges) do
 		if edge.srcname == srcname and edge.destname == destname then
@@ -34,6 +48,8 @@ function GraphPrototype:getEdge(srcname,destname)
 	end
 	error("Edge not found in graph", 2)
 end
+
+		-- g:getPathAsEdgeTable({"one","two","three"})
 function GraphPrototype:getNode(nodename)
 	for _, node in ipairs(self.nodes) do
 		if node.name == nodename then
