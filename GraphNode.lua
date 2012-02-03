@@ -50,6 +50,10 @@ function GraphNodeIndex:highlight(val,childNum)
 	self.indicators:setValue(childNum,val)
 end
 
+function GraphNodeIndex:setPosition(pos)
+	self.position = pos
+	self:updateOSG()
+end
 function GraphNodeIndex:updateOSG()
 	-- nodePos = self.position
 	-- xformPos = self.osg:getPosition()
