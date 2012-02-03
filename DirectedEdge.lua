@@ -34,7 +34,7 @@ end
 
 function DirectedEdgeIndex:updateOSG()
 	if self.srcpos == self.src.position and self.destpos == self.dest.position then
-		DEDebug "updateOSG had nothing to do"
+		--DEDebug "updateOSG had nothing to do"
 		return
 	end
 	--update the internal pos variables
@@ -44,7 +44,7 @@ function DirectedEdgeIndex:updateOSG()
 	self.indicators.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)))
 	--update highlighted edge graphic
 	self.indicators.Child[2] = YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)))
-	DEDebug "updateOSG is done!"
+	--DEDebug "updateOSG is done!"
 end
 function DirectedEdgeIndex:highlight(val)
 	if val then
