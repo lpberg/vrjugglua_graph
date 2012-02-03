@@ -11,14 +11,15 @@ runfile("GraphNode.lua")
 runfile("Graph.lua")
 runfile("UsefulGeometry.lua")
 runfile("simpleLightsGraph.lua")
+runfile("forceDirectGraph.lua")
 
 -- A graph is G=(V, E)
 g = Graph(
 	{
-		["one"] = GraphNode{position = {-1,-1,0}};
-		["two"] = GraphNode{position = {-1,1,0}};
-		["three"] = GraphNode{position = {1,-1,0}};
-		["four"] = GraphNode{position = {1,1,0}};
+		["one"] = GraphNode{position = {-2,-1,0}};
+		["two"] = GraphNode{position = {-1,2,0}};
+		["three"] = GraphNode{position = {3,-1,1}};
+		["four"] = GraphNode{position = {1,2,0}};
 	},
 	{
 		DirectedEdge("one", "two");
@@ -31,7 +32,11 @@ g = Graph(
 RelativeTo.World:addChild(g.osg.root)
 -- Some fun stuff follows here.
 --g:getPathAsEdgeTable(arg)
-e = g:getEdge("one","two")
+function frameAction()
+	ForceDirectedGraph(g,.25,.05,.180)
+end
+
+Actions.addFrameAction(frameAction)
 -- Add random node.
 -- do
 	-- putting this in a block so you can't get to randomNodeNum from outside
