@@ -54,16 +54,17 @@ function GraphNodeIndex:setPosition(pos)
 	self.position = pos
 	self:updateOSG()
 end
+
 function GraphNodeIndex:updateOSG()
-	-- nodePos = self.position
-	-- xformPos = self.osg:getPosition()
-	-- if ((nodePos[1] ~= xformPos:x()) or (nodePos[2] ~= xformPos:y()) or (nodePos[3] ~= xformPos:z())) then
-		-- self.osg.setPosition(osg.Vec3(unpack(self.position)))
-	-- end
+	--update node pos
+	self.osg:setPosition(osg.Vec3d(unpack(self.position)))
 	-- TODO
-	-- if self.position is different than self.xform:getPosition, update
-	-- and call update on all edges.
+	-- call update on all egdes
+	for _,edge in ipairs(self.edges) do
+		edge:updateOSG()
+	end
 end
+
 
 GraphNode = function(node)
 	-- default value
