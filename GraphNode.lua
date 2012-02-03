@@ -69,5 +69,6 @@ GraphNode = function(node)
 	node.parents = {}
 	node.children = {}
 	node.edges = {}
+	node.velocity = osg.Vec3(0,0,0)
 	return node
 end
