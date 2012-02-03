@@ -19,34 +19,38 @@ end
 function DirectedEdgeIndex:createOSG()
 
 	assert(self.osg == nil, "Only call this createOSG once!")
-	if self.srcpos == self.src.position and self.destpos == self.dest.position then
-		-- nothing to do here!
-		DEDebug "updateOSG had nothing to do"
-		return
-	end
 	self.srcpos = self.src.position
 	self.destpos = self.dest.position
-
-	self.osgcylinder =  CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)))
 	
 	self.indicators = osg.Switch()
+	self.indicators:addChild(CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos))))
 	self.indicators:addChild(YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos))))
-	self.indicators:setAllChildrenOff()
+	self.indicators:setSingleChildOn(0)
+
 	self.osg = Transform{
-		self.osgcylinder,
 		self.indicators,
 	}
 end
 
 function DirectedEdgeIndex:updateOSG()
-	-- TODO update if the xforms of the ends have changed
+	if self.srcpos == self.src.position and self.destpos == self.dest.position then
+		DEDebug "updateOSG had nothing to do"
+		return
+	end
+	--update the internal pos variables
+	self.srcpos = self.src.position
+	self.destpos = self.dest.position
+	--update normal edge graphic
+	self.indicators.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)))
+	--update highlighted edge graphic
+	self.indicators.Child[2] = YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)))
 	DEDebug "updateOSG is done!"
 end
 function DirectedEdgeIndex:highlight(val)
 	if val then
-		self.indicators:setAllChildrenOn()
+		self.indicators:setSingleChildOn(1)
 	else
-		self.indicators:setAllChildrenOff()
+		self.indicators:setSingleChildOn(0)
 	end
 end
 
