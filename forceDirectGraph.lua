@@ -1,5 +1,28 @@
+require("Actions")
+function Coulomb_repulsion(vec1,vec2,mult)
+	mult = mult or 1
+	local lenVec = vec2 - vec1
+	local len = lenVec:length()
+	local normVec = lenVec * (1/len)
+	local magnitude = 1.0/math.pow(len,2)
+	local retVec = normVec * magnitude
+	return retVec*mult*-1
+end
 
-
+function Hooks_attraction(vec1,vec2,d_desired,k)
+	k = k or 1
+	local d = (vec2 - vec1):length()
+	local d_diff = d - d_desired
+	local x = math.abs
+	local retVec
+	if d_diff < 0 then
+		retVec = (vec2 - vec1)
+	else
+		retVec = (vec1 - vec2)
+	end
+	return retVec*-k
+end
+	
 function ForceDirectedGraph(g,small_Num,timestep,damping)
 	--setting up local vars to be used later 
 	local total_kinetic_energy = 0
@@ -19,49 +42,27 @@ function ForceDirectedGraph(g,small_Num,timestep,damping)
 			 for _, everyOtherNode in ipairs(g.nodes) do
 				if(everyOtherNode.name ~= node.name) then
 					local othernodePos = osg.Vec3(unpack(everyOtherNode.position))
-					net_force_on_node = net_force_on_node + Coulomb_repulsion(nodePos,othernodePos)
+					net_force_on_node = net_force_on_node + Coulomb_repulsion(nodePos,othernodePos,10)
 				end
 			end
 			--calculate Hooks Forces on node
 			for _, everyEdgeFromNode in ipairs(node.edges) do
 				local othernodePos = osg.Vec3(unpack(everyEdgeFromNode.dest.position))
-				net_force_on_node = net_force_on_node + Hooks_attraction(nodePos,othernodePos)
+				net_force_on_node = net_force_on_node + Hooks_attraction(nodePos,othernodePos,1,20)
 			end
 			--update the node velocity from 
 			node.velocity = (node.velocity + (net_force_on_node*timestep)) * damping
 			 --calculate new position for node based on velocity and timestep
-			newNodePos = nodePos + (node.velocity*timestep)
+			local newNodePos = nodePos + (node.velocity*timestep)
 			--setting new node position as lua table
-			node.position = {newNodePos:x(),newNodePos:y(),newNodePos:z()}
-			--update osgNode for visualiation
-			--node:updateOSG()
+			node:setPosition({newNodePos:x(),newNodePos:y(),newNodePos:z()})
 			--updating total system kinetic engery
-			total_kinetic_energy := total_kinetic_energy + (math.pow(node.velocity:length(),2))
-			 
+			total_kinetic_energy = total_kinetic_energy + (math.pow(node.velocity:length(),2))
+			Actions.waitForRedraw()
+			print(total_kinetic_energy)
 		end
 	until total_kinetic_energy < some_really_small_number
 	print("Force Directed Graph Layout Algorithm: Complete")
 	return true
 end
 
-
---Sudocode from: http://en.wikipedia.org/wiki/Force-based_algorithms_(graph_drawing)
- -- loop
-     -- total_kinetic_energy := 0 // running sum of total kinetic energy over all particles
-     -- for each node
-         -- net-force := (0, 0) // running sum of total force on this particular node
-         
-         -- for each other node
-             -- net-force := net-force + Coulomb_repulsion( this_node, other_node )
-         -- next node
-         
-         -- for each spring connected to this node
-             -- net-force := net-force + Hooke_attraction( this_node, spring )
-         -- next spring
-         
-         -- // without damping, it moves forever
-         -- this_node.velocity := (this_node.velocity + timestep * net-force) * damping
-         -- this_node.position := this_node.position + timestep * this_node.velocity
-         -- total_kinetic_energy := total_kinetic_energy + this_node.mass * (this_node.velocity)^2
-     -- next node
- -- until total_kinetic_energy is less than some small number  // the simulation has stopped moving
