@@ -85,7 +85,7 @@ RedIndicatorSphere = function()
 		bf:setFunction(CONSTANT_ALPHA, ONE_MINUS_CONSTANT_ALPHA)
 		state:setAttributeAndModes(bf)
 
-		local bc = osg.BlendColor(osg.Vec4(1.0, 1.0, 1.0, arg.alpha or 0.5))
+		local bc = osg.BlendColor(osg.Vec4(1.0, 1.0, 1.0, alpha or 0.5))
 		state:setAttributeAndModes(bc)
 		group:setStateSet(state)
 	end
