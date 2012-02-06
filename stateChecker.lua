@@ -1,18 +1,44 @@
- local OSGBodies = {}
- local SimulationBodies = {}
- local BodyIDTable = {}
+require("Actions")
+require("getScriptFilename")
+vrjLua.appendToModelSearchPath(getScriptFilename())
+dofile(vrjLua.findInModelSearchPath([[loadOmni.lua]]))
+dofile(vrjLua.findInModelSearchPath([[loadBurrPuzzle.lua]]))
+
+local ar = 2
+local assemblyPos = osg.Vec3d(0,.5,0)
+local OSGBodies = {}
+local SimulationBodies = {}
+local BodyIDTable = {}
  
+ if not partDensity then
+	partDensity = 2
+end
+
+RelativeTo.World:addChild(Sphere{radius=.05,position = {assemblyPos:x(),assemblyPos:y(),assemblyPos:z()}})
+
+
  --for all bodies in simulation
- --BodyIDTable[VPSBody] = VPSBody.id
- -- table.insert(SimulationBodies,VPSBody)
+BodyIDTable[yellow] = yellow.id
+table.insert(SimulationBodies,yellow)
+BodyIDTable[green] = green.id
+table.insert(SimulationBodies,green)
+BodyIDTable[purple] = purple.id
+table.insert(SimulationBodies,purple)
+BodyIDTable[teal] = teal.id
+table.insert(SimulationBodies,teal)
+BodyIDTable[red] = red.id
+table.insert(SimulationBodies,red)
+BodyIDTable[blue] = blue.id
+table.insert(SimulationBodies,blue)
+
  
  
- function getTransformForCoordinateFrame(coordinateFrame, node)
+function getTransformForCoordinateFrame(coordinateFrame, node)
 	if node == nil then node = assert(knownInView(coordinateFrame)) end
 	if node:isSameKindAs(osg.MatrixTransform()) then
 		return node
 	else
-		return getTransformForCoordinateFrame(coordinateFrame, node.Children[1])
+		return getTransformForCoordinateFrame(coordinateFrame, node.Child[1])
 	end
 end
  
@@ -20,14 +46,14 @@ end
 	if OSGBodies[body] ~= nil then
 		 return OSGBodies[body]
 	else
-		OSGBodies[body] = getTransformForCoordinateFrame(body)
+		OSGBodies[body] = getTransformForCoordinateFrame(body).Child[1]
 		return OSGBodies[body]
 	end
 end
  
  
  function PartInAssembley(body,assemblyCenter,threshold)
-	local bodyPos = getOSGBodyFromCoordinateFrame(body):getPosition()
+	local bodyPos = getOSGBodyFromCoordinateFrame(body):getMatrix():getTrans()
 	local distance = (assemblyCenter - bodyPos):length()
 	if distance < threshold then
 		return true
@@ -37,10 +63,10 @@ end
 end
 
 function getCurrentState()
-	local state = ""
+	local state=""
 	local bodies_in_state = {}
 	for _,body in ipairs(SimulationBodies) do
-		if(PartInAssembley(body,osg.Vec3(0,0,0),.5)) then
+		if(PartInAssembley(body,assemblyPos,ar)) then
 			table.insert(bodies_in_state,BodyIDTable[body])
 		end
 	end
@@ -50,8 +76,27 @@ function getCurrentState()
 	end
 	return state
 end
-		
+
+function KeepTrackofState()
+	local counter = 0
+	local state = getCurrentState()
+	while true do
+		if counter > 100 then
+			local newState = getCurrentState()
+			if state ~= newState then
+				state = newState
+				print("State Change:"..state)
+			end
+			counter = 0
+		end
+		counter = counter + 1
+		Actions.waitForRedraw()
+	end
+end
+Actions.addFrameAction(KeepTrackofState)
+
 			
-			
+
+simulation:startInSchedulerThread()
 			
 		
