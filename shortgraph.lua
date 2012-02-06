@@ -1,7 +1,6 @@
 --See http://www.lua.org/pil/16.html and http://www.lua.org/pil/16.1.html for more information
 require("Actions")
 require("getScriptFilename")
-require("strict")
 vrjLua.appendToModelSearchPath(getScriptFilename())
 function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
 
@@ -38,6 +37,9 @@ end
 
 function start()
 	Actions.addFrameAction(frameAction)
+end
+function doit()
+	simulation:runFunctionWithSimulationPaused(start)
 end
 -- Add random node.
 -- do
