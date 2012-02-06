@@ -11,6 +11,7 @@ end
 
 function Hooks_attraction(vec1,vec2,d_desired,k)
 	k = k or 1
+	local d_desired = d_desired or 1
 	local d = (vec2 - vec1):length()
 	local d_diff = d - d_desired
 	local x = math.abs
@@ -23,12 +24,24 @@ function Hooks_attraction(vec1,vec2,d_desired,k)
 	return retVec*-k
 end
 	
-function ForceDirectedGraph(g,small_Num,timestep,damping)
+function ForceDirectedGraph(g,args)
 	--setting up local vars to be used later 
+	args.c_mult = args.c_mult or 10
+	print(args.c_mult)
+	args.h_mult = args.h_mult or 50
+	print(args.h_mult)
+	args.coulomb = args.coulomb or true
+	print(args.coulomb)
+	args.hooks = args.hooks or true
+	print(args.hooks)
+	args.small_num = args.small_num or .20
+	print(args.small_num)
+	args.damping = args.damping or .80
+	print(args.damping)
+	
 	local total_kinetic_energy = 0
-	local some_really_small_number = small_Num or 1
-	local damping = damping or .80
-	local timestep = timestep or .05
+	local timestep = Actions.waitForRedraw()
+	
 	print("Force Directed Graph Layout Algorithm: Started")
 	 repeat
 		--reseting system total_kinetic_energy to zero
@@ -39,29 +52,32 @@ function ForceDirectedGraph(g,small_Num,timestep,damping)
 			 --get this nodes position
 			 local nodePos = osg.Vec3(unpack(node.position))
 			 --calculate Coulomb Forces on node
-			 for _, everyOtherNode in ipairs(g.nodes) do
-				if(everyOtherNode.name ~= node.name) then
-					local othernodePos = osg.Vec3(unpack(everyOtherNode.position))
-					net_force_on_node = net_force_on_node + Coulomb_repulsion(nodePos,othernodePos,10)
+			if(args.coulomb) then
+				 for _, everyOtherNode in ipairs(g.nodes) do
+					if(everyOtherNode.name ~= node.name) then
+						local othernodePos = osg.Vec3(unpack(everyOtherNode.position))
+						net_force_on_node = net_force_on_node + Coulomb_repulsion(nodePos,othernodePos,args.c_mult)
+					end
 				end
 			end
 			--calculate Hooks Forces on node
-			for _, everyEdgeFromNode in ipairs(node.edges) do
-				local othernodePos = osg.Vec3(unpack(everyEdgeFromNode.dest.position))
-				net_force_on_node = net_force_on_node + Hooks_attraction(nodePos,othernodePos,1,20)
+			if(args.hooks) then
+				for _, everyEdgeFromNode in ipairs(node.edges) do
+					local othernodePos = osg.Vec3(unpack(everyEdgeFromNode.dest.position))
+					net_force_on_node = net_force_on_node + Hooks_attraction(nodePos,othernodePos,1,args.h_mult)
+				end
 			end
 			--update the node velocity from 
-			node.velocity = (node.velocity + (net_force_on_node*timestep)) * damping
+			node.velocity = (node.velocity + (net_force_on_node*timestep)) * args.damping
 			 --calculate new position for node based on velocity and timestep
 			local newNodePos = nodePos + (node.velocity*timestep)
 			--setting new node position as lua table
 			node:setPosition({newNodePos:x(),newNodePos:y(),newNodePos:z()})
 			--updating total system kinetic engery
 			total_kinetic_energy = total_kinetic_energy + (math.pow(node.velocity:length(),2))
-			Actions.waitForRedraw()
-			print(total_kinetic_energy)
+			timestep = Actions.waitForRedraw()
 		end
-	until total_kinetic_energy < some_really_small_number
+	until total_kinetic_energy < args.small_num
 	print("Force Directed Graph Layout Algorithm: Complete")
 	return true
 end
