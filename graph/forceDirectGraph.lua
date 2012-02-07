@@ -1,30 +1,31 @@
 require("Actions")
-function Coulomb_repulsion(vec1,vec2,mult)
-	mult = mult or 1
-	local lenVec = vec2 - vec1
-	local len = lenVec:length()
-	local normVec = lenVec * (1/len)
-	local magnitude = 1.0/math.pow(len,2)
-	local retVec = normVec * magnitude
-	return retVec*mult*-1
-end
 
-function Hooks_attraction(vec1,vec2,d_desired,k)
-	k = k or 1
-	local d_desired = d_desired or 1
-	local d = (vec2 - vec1):length()
-	local d_diff = d - d_desired
-	local x = math.abs
-	local retVec
-	if d_diff < 0 then
-		retVec = (vec2 - vec1)
-	else
-		retVec = (vec1 - vec2)
-	end
-	return retVec*-k
-end
 	
 function ForceDirectedGraph(g,args)
+	local function Coulomb_repulsion(vec1,vec2,mult)
+		mult = mult or 1
+		local lenVec = vec2 - vec1
+		local len = lenVec:length()
+		local normVec = lenVec * (1/len)
+		local magnitude = 1.0/math.pow(len,2)
+		local retVec = normVec * magnitude
+		return retVec*mult*-1
+	end
+
+	local function Hooks_attraction(vec1,vec2,d_desired,k)
+		k = k or 1
+		local d_desired = d_desired or 1
+		local d = (vec2 - vec1):length()
+		local d_diff = d - d_desired
+		local x = math.abs
+		local retVec
+		if d_diff < 0 then
+			retVec = (vec2 - vec1)
+		else
+			retVec = (vec1 - vec2)
+		end
+		return retVec*-k
+	end
 	--setting up local vars to be used later 
 	args.c_mult = args.c_mult or 10
 	print(args.c_mult)
