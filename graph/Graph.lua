@@ -37,7 +37,7 @@ function GraphPrototype:getPathAsEdgeTable(args)
 	end
 	return edgeTable
 end
-function GraphPrototype:disableHighlighting()
+function GraphPrototype:disablePathHighlighting()
 	for _, edge in ipairs(self.edges) do
 		edge:highlight(false)
 	end
