@@ -42,6 +42,11 @@ function GraphPrototype:disablePathHighlighting()
 		edge:highlight(false)
 	end
 end
+function GraphPrototype:disableNodeHighlighting()
+	for _, node in ipairs(self.nodes) do
+		node:highlight(false)
+	end
+end
 function GraphPrototype:highlightPath(edgeTable)
 	for _, edge in ipairs(edgeTable) do
 		edge:highlight(true)
