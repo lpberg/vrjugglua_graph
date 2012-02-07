@@ -31,7 +31,6 @@ function GraphPrototype:getPathAsEdgeTable(args)
 	local edgeTable= {}
 	for k,v in ipairs(args) do
 		if args[k+1] ~= nil then
-			print(args[k],args[k+1])
 			e = self:getEdge(args[k],args[k+1])
 			edgeTable[k] = e
 		end
