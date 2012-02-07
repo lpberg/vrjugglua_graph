@@ -73,6 +73,39 @@ function GraphPrototype:printCurrentPath()
 		print(v)
 	end
 end
+function GraphPrototype:updateCurrentState(state_name)
+	--Does the node / state exist in the graph yet?, if no create one
+	if (self:getNode(state_name) == nil) then
+		self:createChildFromCurrentState(state_name)
+	end
+	--Is this the first state in the graph?, then add it and highlight node
+	if(#self.currentPath == 0) then
+		table.insert(self.currentPath,state_name)
+		self:getNode(state_name):highlight(true)
+		self:printCurrentPath()
+	--if its not the first, find newest path, and update graphics
+	else
+		self:disableNodeHighlighting()
+		local currentStateFound = false
+		for idx,stateName in ipairs(self.currentPath) do
+			if(currentStateFound == false) then
+				-- self.currentPath[idx] = self.currentPath[idx]
+				if(stateName == state_name) then
+					currentStateFound = true
+				end
+			else
+				self.currentPath[idx] = nil
+			end
+		end
+		--wasn't in the path, add it
+		if(currentStateFound == false) then
+			table.insert(self.currentPath,state_name)
+		end
+		self:getNode(state_name):highlight(true)
+		self:updateHighlightedPath()
+	end
+end
+
 function GraphPrototype:getEdge(srcname,destname)
 	for _, edge in ipairs(self.edges) do
 		if edge.srcname == srcname and edge.destname == destname then
@@ -125,6 +158,7 @@ end
 		{
 			nodes = {},
 			edges = {},
+			currentPath = {},
 			osg = {
 				noderoot = Group{},
 				edgeroot = Group{},
