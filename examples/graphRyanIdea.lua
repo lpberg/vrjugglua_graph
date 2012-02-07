@@ -26,18 +26,23 @@ g = Graph(
 )
 
 RelativeTo.World:addChild(g.osg.root)
--- Some fun stuff follows here.
---g:getPathAsEdgeTable(arg)
-function frameAction()
-	ForceDirectedGraph(g,{small_num = .55,damping = .80, c_mult = 2})
-end
 
-function start()
-	Actions.addFrameAction(frameAction)
-end
-function doit()
-	simulation:runFunctionWithSimulationPaused(start)
-end
+g.actionArgs = {small_num = .55,damping = .80, c_mult = 2, h_mult = 100}
+-- g:performAction()
+g:updateCurrentState("one")
+g:updateCurrentState("onetwo")
+g:updateCurrentState("one")
+g:updateCurrentState("onethree")
+g:updateCurrentState("onethre2e")
+g:performAction()
+-- g.action = ForceDirectedGraph(g,{small_num = .55,damping = .80, c_mult = 2})
+
+-- function run()
+	-- local function doit()
+		-- g:ForceDirectedGraph(g.actionArgs)
+	-- end00
+	-- Actions.addFrameAction(doit)
+-- end
 -- Add random node.
 -- do
 	-- putting this in a block so you can't get to randomNodeNum from outside

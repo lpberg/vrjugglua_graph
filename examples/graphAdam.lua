@@ -1,16 +1,15 @@
 --See http://www.lua.org/pil/16.html and http://www.lua.org/pil/16.1.html for more information
 require("Actions")
 require("getScriptFilename")
-require("strict")
 vrjLua.appendToModelSearchPath(getScriptFilename())
 function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
 
 -- I split stuff up since it got hard to read once I commented it
-runfile("DirectedEdge.lua")
-runfile("GraphNode.lua")
-runfile("Graph.lua")
-runfile("UsefulGeometry.lua")
-runfile("simpleLightsGraph.lua")
+runfile([[..\graph\loadGraphFiles.lua]])
+runfile([[..\graph\simpleLightsGraph.lua]])
+
+
+
 
 -- A graph is G=(V, E)
 g = Graph(
@@ -154,5 +153,6 @@ g = Graph(
 			--DirectedEdge("32", "33");
 }
 )
-
+g.actionArgs = {small_num = .55,damping = .80, c_mult = 100, h_mult = 10, hooks=false}
 RelativeTo.World:addChild(g.osg.root)
+g:performAction()
