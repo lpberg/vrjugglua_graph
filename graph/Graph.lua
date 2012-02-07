@@ -52,6 +52,18 @@ function GraphPrototype:highlightPath(edgeTable)
 		edge:highlight(true)
 	end
 end
+function GraphPrototype:createChildFromCurrentState(name)
+	-- if this is first node , set pos default to 000 - bad idea
+	local childPos
+	if(#self.currentPath == 0) then
+		childPos = {0,0,0}
+	else
+		childPos = self:getNode(self.currentPath[#self.currentPath]).position
+	end
+	self:addNodes({[name] = GraphNode{position = {childPos[1],childPos[2]-.5,childPos[3]}}})
+	self:addEdges({DirectedEdge(self.currentPath[#self.currentPath], name)})
+	--self:updateCurrentState(name)
+end
 function GraphPrototype:getEdge(srcname,destname)
 	for _, edge in ipairs(self.edges) do
 		if edge.srcname == srcname and edge.destname == destname then
