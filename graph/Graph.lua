@@ -73,6 +73,7 @@ function GraphPrototype:printCurrentPath()
 		print(v)
 	end
 end
+
 function GraphPrototype:updateCurrentState(state_name)
 	--Does the node / state exist in the graph yet?, if no create one
 	if (self:getNode(state_name) == nil) then
@@ -112,17 +113,18 @@ function GraphPrototype:getEdge(srcname,destname)
 			return edge
 		end
 	end
-	error("Edge not found in graph", 2)
+	print("edge not found in graph")
+	return nil
 end
 
-		-- g:getPathAsEdgeTable({"one","two","three"})
 function GraphPrototype:getNode(nodename)
+	local retNode = nil
 	for _, node in ipairs(self.nodes) do
 		if node.name == nodename then
-			return node
+			retNode = node
 		end
 	end
-	error("Node:"..nodename.." not found in graph", 2)
+	return retNode
 end
 
 function GraphPrototype:addEdges(edges)
