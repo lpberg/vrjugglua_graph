@@ -68,6 +68,11 @@ function GraphPrototype:createChildFromCurrentState(name)
 	self:addEdges({DirectedEdge(self.currentPath[#self.currentPath], name)})
 	--self:updateCurrentState(name)
 end
+function GraphPrototype:printCurrentPath()
+	for _,v in ipairs(self.currentPath) do
+		print(v)
+	end
+end
 function GraphPrototype:getEdge(srcname,destname)
 	for _, edge in ipairs(self.edges) do
 		if edge.srcname == srcname and edge.destname == destname then
