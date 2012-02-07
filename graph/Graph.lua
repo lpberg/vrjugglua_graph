@@ -52,6 +52,10 @@ function GraphPrototype:highlightPath(edgeTable)
 		edge:highlight(true)
 	end
 end
+function GraphPrototype:updateHighlightedPath()
+	self:disablePathHighlighting()
+	self:highlightPath(self:getPathAsEdgeTable(self.currentPath))
+end
 function GraphPrototype:createChildFromCurrentState(name)
 	-- if this is first node , set pos default to 000 - bad idea
 	local childPos
