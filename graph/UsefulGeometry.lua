@@ -1,10 +1,10 @@
-CylinderFromHereToThere = function(here, there) 
+CylinderFromHereToThere = function(here, there,rad) 
 	local Cylinder = function (a)
 		local pos = osg.Vec3(0.0, 0.0, 0.0)
 		if a.position then
 			pos:set(unpack(a.position))
 		end
-		local drbl = osg.ShapeDrawable(osg.Cylinder(pos, a.radius or 0.025, a.height or 1.0))
+		local drbl = osg.ShapeDrawable(osg.Cylinder(pos, rad or 0.025, a.height or 1.0))
 		local color = osg.Vec4(0,0,1,0)
 		if a.color then
 			color:set(unpack(a.color))
@@ -26,7 +26,7 @@ CylinderFromHereToThere = function(here, there)
 	xform:setAttitude(newQuat)
 	return xform
 end
-YellowCylinderFromHereToThere = function(here, there) 
+YellowCylinderFromHereToThere = function(here, there,rad) 
 	local function TransparentObject(group)
 		local state = group:getOrCreateStateSet()
 		state:setRenderingHint(2) -- transparent bin
@@ -46,7 +46,7 @@ YellowCylinderFromHereToThere = function(here, there)
 		if a.position then
 			pos:set(unpack(a.position))
 		end
-		local drbl = osg.ShapeDrawable(osg.Cylinder(pos, a.radius or 0.025*2, a.height or 1.0))
+		local drbl = osg.ShapeDrawable(osg.Cylinder(pos, rad*2 or 0.025*2, a.height or 1.0))
 		local color = osg.Vec4(1,1,0,0)
 		if a.color then
 			color:set(unpack(a.color))
