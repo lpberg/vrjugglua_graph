@@ -70,7 +70,6 @@ function GraphPrototype:createChildFromCurrentState(name)
 	print(ss)
 	self:addNodes({[name] = GraphNode{position = {childPos[1]+ss/100,childPos[2]-.5,childPos[3]}}})
 	self:addEdges({DirectedEdge(self.currentPath[#self.currentPath], name)})
-	-- self:updateCurrentState(name)
 end
 function GraphPrototype:printCurrentPath()
 	for _,v in ipairs(self.currentPath) do
@@ -79,9 +78,11 @@ function GraphPrototype:printCurrentPath()
 end
 
 function GraphPrototype:updateCurrentState(state_name)
+	local childCreatedThisExecution = false
 	--Does the node / state exist in the graph yet?, if no create one
 	if (self:getNode(state_name) == nil) then
 		self:createChildFromCurrentState(state_name)
+		childCreatedThisExecution = true
 	end
 	--Is this the first state in the graph?, then add it and highlight node
 	if(#self.currentPath == 0) then
@@ -146,11 +147,12 @@ function GraphPrototype:getNodeWithChildren(nodename)
 	end
 	return nodes
 end
-function GraphPrototype:performAction()
-	local function doit()
-		self:ForceDirectedGraph(self.actionArgs)
+
+function GraphPrototype:performAction(nodes)
+	local function addFrameActionNow()
+		self:ForceDirectedGraph(self.actionArgs,nodes)
 	end
-	Actions.addFrameAction(doit)
+	Actions.addFrameAction(addFrameActionNow)
 end
 
 
@@ -184,7 +186,8 @@ end
 
 
 	
-function GraphPrototype:ForceDirectedGraph(args)
+function GraphPrototype:ForceDirectedGraph(args,nodes)
+	local nodes = nodes or self.nodes
 	local function Coulomb_repulsion(vec1,vec2,mult)
 		mult = mult or 1
 		local lenVec = vec2 - vec1
@@ -211,6 +214,7 @@ function GraphPrototype:ForceDirectedGraph(args)
 	end
 	--setting up local vars to be used later 
 	args.c_mult = args.c_mult or 10
+	args.desiredEdgeLength = args.desiredEdgeLength or 1
 	args.h_mult = args.h_mult or 50
 	args.coulomb = args.coulomb or true
 	args.hooks = args.hooks or true
@@ -224,14 +228,14 @@ function GraphPrototype:ForceDirectedGraph(args)
 	 repeat
 		--reseting system total_kinetic_energy to zero
 		 total_kinetic_energy = 0 
-		 for _, node in ipairs(self.nodes) do
+		 for _, node in ipairs(nodes) do
 			 --reset net force on current note (to recalculate)
 			 local net_force_on_node = osg.Vec3(0,0,0) 
 			 --get this nodes position
 			 local nodePos = osg.Vec3(unpack(node.position))
 			 --calculate Coulomb Forces on node
 			if(args.coulomb) then
-				 for _, everyOtherNode in ipairs(self.nodes) do
+				 for _, everyOtherNode in ipairs(nodes) do
 					if(everyOtherNode.name ~= node.name) then
 						local othernodePos = osg.Vec3(unpack(everyOtherNode.position))
 						net_force_on_node = net_force_on_node + Coulomb_repulsion(nodePos,othernodePos,args.c_mult)
@@ -242,7 +246,7 @@ function GraphPrototype:ForceDirectedGraph(args)
 			if(args.hooks) then
 				for _, everyEdgeFromNode in ipairs(node.edges) do
 					local othernodePos = osg.Vec3(unpack(everyEdgeFromNode.dest.position))
-					net_force_on_node = net_force_on_node + Hooks_attraction(nodePos,othernodePos,1,args.h_mult)
+					net_force_on_node = net_force_on_node + Hooks_attraction(nodePos,othernodePos,args.desiredEdgeLength,args.h_mult)
 				end
 			end
 			--update the node velocity from 
