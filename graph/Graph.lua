@@ -131,6 +131,15 @@ function GraphPrototype:getNode(nodename)
 	return retNode
 end
 
+function GraphPrototype:getNodeWithChildren(nodename)
+	local nodes = {}
+	local parent = self:getNode(nodename)
+	table.insert(nodes,parent)
+	for _,child in ipairs(parent.children) do
+		table.insert(nodes,child)
+	end
+	return nodes
+end
 function GraphPrototype:performAction()
 	local function doit()
 		self:ForceDirectedGraph(self.actionArgs)
