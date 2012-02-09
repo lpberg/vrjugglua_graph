@@ -1,5 +1,6 @@
 require("Actions")
 require("getScriptFilename")
+require("TransparentGroup")
 vrjLua.appendToModelSearchPath(getScriptFilename())
 dofile(vrjLua.findInModelSearchPath([[loadOmni.lua]]))
 dofile(vrjLua.findInModelSearchPath([[loadBurrPuzzle.lua]]))
@@ -13,10 +14,12 @@ local BodyIDTable = {}
  if not partDensity then
 	partDensity = 2
 end
-
-RelativeTo.World:addChild(Sphere{radius=.05,position = {assemblyPos:x(),assemblyPos:y(),assemblyPos:z()}})
-
-
+transXform = 
+RelativeTo.World:addChild(
+	TransparentGroup{
+		Sphere{radius=1,position = {assemblyPos:x(),assemblyPos:y(),assemblyPos:z()}}
+	}
+)
  --for all bodies in simulation
 BodyIDTable[yellow] = yellow.id
 table.insert(SimulationBodies,yellow)
