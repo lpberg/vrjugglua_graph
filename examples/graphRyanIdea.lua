@@ -13,28 +13,25 @@ runfile([[..\graph\simpleLightsGraph.lua]])
 g = Graph(
 	{
 		["one"] = GraphNode{position = {-2,-1,0}};
-		["two"] = GraphNode{position = {-1,2,0}};
-		["three"] = GraphNode{position = {3,-1,1}};
-		["four"] = GraphNode{position = {1,2,0}};
+		-- ["two"] = GraphNode{position = {-1,2,0}};
+		-- ["three"] = GraphNode{position = {3,-1,1}};
+		-- ["four"] = GraphNode{position = {1,2,0}};
 	},
 	{
-		DirectedEdge("one", "two");
-		DirectedEdge("two", "three");
-		DirectedEdge("three", "four");
-		DirectedEdge("four", "one");
+		-- DirectedEdge("one", "two");
+		-- DirectedEdge("two", "three");
+		-- DirectedEdge("three", "four");
+		-- DirectedEdge("four", "one");
 	}
 )
 
 RelativeTo.World:addChild(g.osg.root)
 
-g.actionArgs = {small_num = .55,damping = .80, c_mult = 2, h_mult = 100}
+g.actionArgs = {small_num = .55,damping = .80, c_mult = .5, h_mult = 100}
 -- g:performAction()
-g:updateCurrentState("one")
-g:updateCurrentState("onetwo")
-g:updateCurrentState("one")
-g:updateCurrentState("onethree")
-g:updateCurrentState("onethre2e")
-g:performAction()
+
+
+
 -- g.action = ForceDirectedGraph(g,{small_num = .55,damping = .80, c_mult = 2})
 
 -- function run()
