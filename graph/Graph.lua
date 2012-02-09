@@ -108,6 +108,12 @@ function GraphPrototype:updateCurrentState(state_name)
 		end
 		self:getNode(state_name):highlight(true)
 		self:updateHighlightedPath()
+		-- if new child created and a parent exists call FDG on its parent
+		if (#self.currentPath > 1 and childCreatedThisExecution) then
+			local nodesOfInterest = self:getNodeWithChildren(self.currentPath[#self.currentPath - 1])
+			self:performAction(nodesOfInterest)
+		end
+		
 	end
 end
 
