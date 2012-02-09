@@ -5,8 +5,8 @@ vrjLua.appendToModelSearchPath(getScriptFilename())
 dofile(vrjLua.findInModelSearchPath([[loadOmni.lua]]))
 dofile(vrjLua.findInModelSearchPath([[loadBurrPuzzle.lua]]))
 
-local ar = 2
-local assemblyPos = osg.Vec3d(0,.5,0)
+local ar = .25
+local assemblyPos = osg.Vec3d(-.2,.65,.1)
 local OSGBodies = {}
 local SimulationBodies = {}
 local BodyIDTable = {}
@@ -14,10 +14,10 @@ local BodyIDTable = {}
  if not partDensity then
 	partDensity = 2
 end
-transXform = 
+
 RelativeTo.World:addChild(
 	TransparentGroup{
-		Sphere{radius=1,position = {assemblyPos:x(),assemblyPos:y(),assemblyPos:z()}}
+		Sphere{radius=ar,position = {assemblyPos:x(),assemblyPos:y(),assemblyPos:z()}}
 	}
 )
  --for all bodies in simulation
@@ -68,7 +68,7 @@ function getCurrentState()
 	local state=""
 	local bodies_in_state = {}
 	for _,body in ipairs(SimulationBodies) do
-		if(PartInAssembley(body,assemblyPos,ar)) then
+		if(PartInAssembley(body,assemblyPos,1)) then
 			table.insert(bodies_in_state,BodyIDTable[body])
 		end
 	end
@@ -79,11 +79,11 @@ function getCurrentState()
 	return state
 end
 
-function KeepTrackofState(perFrames)
+function KeepTrackofState()
 	local counter = 0
 	local state = getCurrentState()
 	while true do
-		if counter > perFrames then
+		if counter > 100 then
 			local newState = getCurrentState()
 			if state ~= newState then
 				state = newState
@@ -95,7 +95,10 @@ function KeepTrackofState(perFrames)
 		Actions.waitForRedraw()
 	end
 end
-Actions.addFrameAction(KeepTrackofState(100))
+function fa()
+	KeepTrackofState()
+end
+Actions.addFrameAction(fa)
 
 			
 
