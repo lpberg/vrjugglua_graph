@@ -11,10 +11,10 @@ runfile([[..\graph\simpleLightsGraph.lua]])
 -- A graph is G=(V, E)
 g = Graph(
 	{
-		["one"] = GraphNode{position = {.1,1,0}};
-		["two"] = GraphNode{position = {-.1,.5,0}};
-		["three"] = GraphNode{position = {3,-1,1}};
-		["four"] = GraphNode{position = {1,2,0}};
+		["one"] = GraphNode{position = {1,1,0},radius = .01};
+		["two"] = GraphNode{position = {-.1,.5,0},radius = .01};
+		["three"] = GraphNode{position = {3,-1,1},radius = .01};
+		["four"] = GraphNode{position = {1,2,0},radius = .01};
 	},
 	{
 		DirectedEdge("one", "two");
