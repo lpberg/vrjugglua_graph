@@ -66,10 +66,12 @@ function GraphPrototype:createChildFromCurrentState(name)
 	else
 		childPos = self:getNode(self.currentPath[#self.currentPath]).position
 	end
-	local ss = math.random(1,100)
-	print(ss)
-	self:addNodes({[name] = GraphNode{position = {childPos[1]+ss/100,childPos[2]-.5,childPos[3]}}})
-	self:addEdges({DirectedEdge(self.currentPath[#self.currentPath], name)})
+	local rand = math.random(1,100)
+	rand = rand/1000
+	local myNodeRadius = self.nodes[1].radius or .01
+
+	self:addNodes({[name] = GraphNode{position = {childPos[1]+rand,childPos[2]-self.actionArgs.desiredEdgeLength,childPos[3]},radius = myNodeRadius}})
+	self:addEdges({DirectedEdge(self.currentPath[#self.currentPath], name,(myNodeRadius/4))})
 end
 function GraphPrototype:printCurrentPath()
 	for _,v in ipairs(self.currentPath) do
