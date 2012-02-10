@@ -36,7 +36,20 @@ table.insert(SimulationBodies,red)
 BodyIDTable[blue] = blue.id
 table.insert(SimulationBodies,blue)
 
- 
+g = nil
+local function createGraphVisualization()
+	g = Graph(
+	{
+		["012345"] = GraphNode{position = {1,1.5,0},radius = .03};
+
+	},
+	{
+
+	}
+	)
+	g.actionArgs = {small_num = .55,damping = .80, c_mult = .06,desiredEdgeLength =.15, h_mult = 50}
+	RelativeTo.World:addChild(g.osg.root)
+end
  
 local function getTransformForCoordinateFrame(coordinateFrame, node)
 	if node == nil then node = assert(knownInView(coordinateFrame)) end
@@ -82,14 +95,16 @@ function getCurrentState()
 end
 
 function KeepTrackofState()
+	g:updateCurrentState(g.nodes[1].name)
 	local counter = 0
 	local state = getCurrentState()
 	while true do
-		if counter > 100 then
+		if counter > 25 then
 			local newState = getCurrentState()
 			if state ~= newState then
 				state = newState
 				print("State Change:"..state)
+				g:updateCurrentState(state)
 			end
 			counter = 0
 		end
@@ -100,9 +115,10 @@ end
 function fa()
 	KeepTrackofState()
 end
+createGraphVisualization()
 Actions.addFrameAction(fa)
 
-			
+		
 
 simulation:startInSchedulerThread()
 			
