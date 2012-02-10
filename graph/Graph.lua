@@ -78,7 +78,6 @@ function GraphPrototype:printCurrentPath()
 		print(v)
 	end
 end
-
 function GraphPrototype:updateCurrentState(state_name)
 	local childCreatedThisExecution = false
 	--Does the node / state exist in the graph yet?, if no create one
@@ -113,8 +112,13 @@ function GraphPrototype:updateCurrentState(state_name)
 		self:updateHighlightedPath()
 		-- if new child created and a parent exists call FDG on its parent
 		if (#self.currentPath > 1 and childCreatedThisExecution) then
-			local nodesOfInterest = self:getNodeWithChildren(self.currentPath[#self.currentPath - 1])
-			self:performAction(nodesOfInterest)
+			-- local nodesOfInterest = self:getNodeWithChildren(self.currentPath[#self.currentPath - 1
+			local parent = self:getNode(self.currentPath[#self.currentPath - 1])
+			local lastC = self.actionArgs.c_mult
+			self.actionArgs.c_mult = 0
+			self:performAction({parent})
+			self.actionArgs.c_mult = lastC
+			self:performAction(parent.children)
 		end
 		
 	end
