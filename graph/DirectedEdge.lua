@@ -23,8 +23,9 @@ function DirectedEdgeIndex:createOSG()
 	self.destpos = self.dest.position
 	
 	self.indicators = osg.Switch()
-	self.indicators:addChild(CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),.0025))
-	self.indicators:addChild(YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),.0025))
+	self.radius = self.radius or .0025
+	self.indicators:addChild(CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius))
+	self.indicators:addChild(YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius))
 	self.indicators:setSingleChildOn(0)
 
 	self.osg = Transform{
@@ -41,9 +42,9 @@ function DirectedEdgeIndex:updateOSG()
 	self.srcpos = self.src.position
 	self.destpos = self.dest.position
 	--update normal edge graphic
-	self.indicators.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)))
+	self.indicators.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius)
 	--update highlighted edge graphic
-	self.indicators.Child[2] = YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)))
+	self.indicators.Child[2] = YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius)
 	--DEDebug "updateOSG is done!"
 end
 function DirectedEdgeIndex:highlight(val)
@@ -54,8 +55,8 @@ function DirectedEdgeIndex:highlight(val)
 	end
 end
 
-DirectedEdge = function(source, destination)
+DirectedEdge = function(source, destination,radius)
 	-- setmetatable returns the table it is given after it modifies it by setting the metatable
 	-- so this is a commonly-seen pattern
-	return setmetatable({srcname = source, destname = destination}, DEMT)
+	return setmetatable({srcname = source, destname = destination, radius = radius}, DEMT)
 end
