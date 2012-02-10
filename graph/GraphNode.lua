@@ -35,7 +35,7 @@ function GraphNodeIndex:createOSG()
 	}
 	
 	self.indicators = osg.Switch()
-	self.indicators:addChild(RedIndicatorSphere())
+	self.indicators:addChild(RedIndicatorSphere(self.radius*2))
 	self.indicators:setValue(0,false)
 	
 	

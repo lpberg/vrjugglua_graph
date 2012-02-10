@@ -74,7 +74,7 @@ YellowCylinderFromHereToThere = function(here, there,rad)
 	return xform
 end
 
-RedIndicatorSphere = function() 
+RedIndicatorSphere = function(myRadius) 
 	local function TransparentObject(group)
 		local state = group:getOrCreateStateSet()
 		state:setRenderingHint(2) -- transparent bin
@@ -108,7 +108,7 @@ RedIndicatorSphere = function()
 
 	local xform = Transform{
 			position = {0,0,0},
-			ColorSphere{radius = .250, color = {1,0,0,1}},
+			ColorSphere{radius = myRadius, color = {1,0,0,1}},
 		}
 	TransparentObject(xform)
 	return xform
