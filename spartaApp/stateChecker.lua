@@ -4,6 +4,8 @@ require("TransparentGroup")
 vrjLua.appendToModelSearchPath(getScriptFilename())
 dofile(vrjLua.findInModelSearchPath([[loadOmni.lua]]))
 dofile(vrjLua.findInModelSearchPath([[loadBurrPuzzle.lua]]))
+dofile(vrjLua.findInModelSearchPath([[..\graph\loadGraphFiles.lua]]))
+switchToBasicFactory() 
 
 local ar = .25
 local assemblyPos = osg.Vec3d(-.2,.65,.1)
