@@ -1,8 +1,8 @@
 params = defineSimulationParameters{
 	maxStiffness = 300.0
 	}
-
-function = addBurrPuzzle(deltaX,deltaY,deltaZ)
+red = nil
+function addBurrPuzzle(deltaX,deltaY,deltaZ)
 	pieceBlue =Transform{
 		scale = 5.0,
 		position = {deltaX,deltaY,deltaZ},
@@ -65,6 +65,15 @@ function = addBurrPuzzle(deltaX,deltaY,deltaZ)
 			Model ([[V:\Applications\Vances_group\GOALI\Burr\BaseBlock.ive]])
 		}
 	}
+	
+	allPieces = Transform{
+		pieceBlue,
+		pieceYellow,
+		pieceGreen,
+		pieceTeal,
+		piecePurple,
+		pieceRed,
+	}
 
 	blue = addObject{
 		position = {0,0,0},
@@ -102,4 +111,5 @@ function = addBurrPuzzle(deltaX,deltaY,deltaZ)
 		density = 15,
 		pieceRed,
 	}
+	return allPieces
 end
