@@ -5,24 +5,26 @@ vrjLua.appendToModelSearchPath(getScriptFilename())
 dofile(vrjLua.findInModelSearchPath([[loadBurrPuzzle.lua]]))
 dofile(vrjLua.findInModelSearchPath([[..\graph\loadGraphFiles.lua]]))
 -- wand = Manipulators.Gadgeteer.Wand{position = "VJWand"}
-addManipulator(wand)
+-- addManipulator(wand)
 switchToBasicFactory() 
-local puzzleX = .25
-local puzzleY = -.9
-local puzzleZ = .12
-addBurrPuzzle(.puzzleX,puzzleY,puzzleZ)
-
-
-local ar = .25
-local assemblyPos = osg.Vec3d(-.2,.65,.1)
+puzzleX = 1.525
+puzzleY = -.9
+puzzleZ = .12
+all = addBurrPuzzle(puzzleX,puzzleY,puzzleZ)
+bounding = all:computeBound()
+assemblyPos = bounding:center()
+assemblyPos = osg.Vec3d(assemblyPos:x(),assemblyPos:y(),assemblyPos:z())
 local OSGBodies = {}
 local SimulationBodies = {}
 local BodyIDTable = {}
- 
-RelativeTo.World:addChild(
+
+helperSphere = Transform{ 
 	TransparentGroup{
-		Sphere{radius=ar,position = {assemblyPos:x(),assemblyPos:y(),assemblyPos:z()}}
+		Sphere{radius=bounding:radius(),position = {assemblyPos:x(),assemblyPos:y(),assemblyPos:z()}}
 	}
+}
+RelativeTo.World:addChild(
+	helperSphere
 )
 
  do
@@ -76,6 +78,7 @@ end
 local function PartInAssembley(body,assemblyCenter,threshold)
 	local bodyPos = getOSGBodyFromCoordinateFrame(body):getMatrix():getTrans()
 	local distance = (assemblyCenter - bodyPos):length()
+	-- print(distance)
 	if distance < threshold then
 		return true
 	else
@@ -87,7 +90,7 @@ function getCurrentState()
 	local state=""
 	local bodies_in_state = {}
 	for _,body in ipairs(SimulationBodies) do
-		if(PartInAssembley(body,assemblyPos,1)) then
+		if(PartInAssembley(body,assemblyPos,2)) then
 			table.insert(bodies_in_state,BodyIDTable[body])
 		end
 	end
