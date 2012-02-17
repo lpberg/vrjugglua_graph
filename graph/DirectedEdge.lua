@@ -24,7 +24,7 @@ function DirectedEdgeIndex:createOSG()
 	
 	self.indicators = osg.Switch()
 	self.radius = self.radius or .0025
-	self.indicators:addChild(CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius))
+	self.indicators:addChild(CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius,self.color))
 	self.indicators:addChild(YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius))
 	self.indicators:setSingleChildOn(0)
 
@@ -55,8 +55,9 @@ function DirectedEdgeIndex:highlight(val)
 	end
 end
 
-DirectedEdge = function(source, destination,radius)
+DirectedEdge = function(source, destination,args)
 	-- setmetatable returns the table it is given after it modifies it by setting the metatable
 	-- so this is a commonly-seen pattern
-	return setmetatable({srcname = source, destname = destination, radius = radius}, DEMT)
+	args.destColor = args.destColor or {1,1,1,0}
+	return setmetatable({srcname = source, destname = destination, radius = args.radius,color = args.color, destColor = args.destColor}, DEMT)
 end
