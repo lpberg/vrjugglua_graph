@@ -84,6 +84,15 @@ function GraphPrototype:printCurrentPath()
 		print(v)
 	end
 end
+function GraphPrototype:updateColorOfChildren(name)
+	local node = self.nodes[name]
+	for _,child in ipairs(node.children) do
+		local edgeOfInterest = self:getEdge(name,child.name) 
+		if (edgeOfInterest.destColor ~= nil) then
+			child:setColor(edgeOfInterest.destColor)
+		end
+	end
+end
 function GraphPrototype:updateCurrentState(state_name)
 	local childCreatedThisExecution = false
 	--Does the node / state exist in the graph yet?, if no create one
