@@ -47,8 +47,8 @@ local function getOSGBodyFromCoordinateFrame(body)
 end
 
  do
-	-- BodyIDTable[yellow] = yellow.id
-	-- table.insert(SimulationBodies,yellow)
+	BodyIDTable[yellow] = yellow.id
+	table.insert(SimulationBodies,yellow)
 	BodyIDTable[green] = green.id
 	table.insert(SimulationBodies,green)
 	BodyIDTable[purple] = purple.id
@@ -61,6 +61,7 @@ end
 	table.insert(SimulationBodies,blue)
 end
 function setupInitPositions()
+	initPosById[yellow] = getOSGBodyFromCoordinateFrame(yellow):getMatrix():getTrans()
 	initPosById[green] = getOSGBodyFromCoordinateFrame(green):getMatrix():getTrans()
 	initPosById[purple] = getOSGBodyFromCoordinateFrame(purple):getMatrix():getTrans()
 	initPosById[teal] = getOSGBodyFromCoordinateFrame(teal):getMatrix():getTrans()
