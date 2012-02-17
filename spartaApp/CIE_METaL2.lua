@@ -77,55 +77,61 @@ g = nil
 
 local function createGraphVisualization()
 	local fact = .15
+	local green = {(154/255),(205/255),(50/255),1}
+	local yellow = {1,(215/255),0,1}
+	local red = {1,0,0,1}
+	local teal = {0,(206/255),(209/255),1}
+	local purple = {(138/255),(43/255),(210/255),1}
+	local blue = {0,0,1,1}
 	g = Graph(
 	{
 		--x = 0
 		["012345"] = GraphNode{position = {0,0,0},radius = .03};
-		["01234"] = GraphNode{position = {0,-1*fact,0},radius = .03};
-		["0123"] = GraphNode{position = {0,-2*fact,0},radius = .03};
-		["12"] = GraphNode{position = {0,-4*fact,0},radius = .03};
-		["1"] = GraphNode{position = {0,-5*fact,0},radius = .03};
-		["2"] = GraphNode{position = {0,-6*fact,fact},radius = .03};
+		["01234"] = GraphNode{position = {0,-1*fact,0},radius = .03,color = red}; 
+		["0123"] = GraphNode{position = {0,-2*fact,0},radius = .03,color = teal};
+		["12"] = GraphNode{position = {0,-4*fact,0},radius = .03,color = purple}; 
+		["1"] = GraphNode{position = {0,-5*fact,0},radius = .03,color = green}; 
+		["2"] = GraphNode{position = {.1,-6*fact,fact},radius = .03,color = blue}; 
 		--x = 1
-		["012"] = GraphNode{position = {1*fact,-3*fact,0},radius = .03};
-		["02"] = GraphNode{position = {1*fact,-4*fact,0},radius = .03};
+		["012"] = GraphNode{position = {1*fact,-3*fact,0},radius = .03,color = purple}; 
+		["02"] = GraphNode{position = {1*fact,-4*fact,0},radius = .03,color = yellow}; 
 		--x = 2
-		["01"] = GraphNode{position = {2*fact,-4*fact,0},radius = .03};
-		["0"] = GraphNode{position = {2*fact,-5*fact,0},radius = .03};
+		["01"] = GraphNode{position = {2*fact,-4*fact,0},radius = .03,color = green}; 
+		["0"] = GraphNode{position = {2*fact,-5*fact,0},radius = .03,color = yellow};
 		--x = -1
-		["123"] = GraphNode{position = {-1*fact,-3*fact,0},radius = .03};
-		["23"] = GraphNode{position = {-1*fact,-4*fact,0},radius = .03};
+		["123"] = GraphNode{position = {-1*fact,-3*fact,0},radius = .03,color = blue};
+		["23"] = GraphNode{position = {-1*fact,-4*fact,0},radius = .03,color = yellow}; 
 		--x = -2
-		["13"] = GraphNode{position = {-2*fact,-4*fact,0},radius = .03};
-		["3"] = GraphNode{position = {-2*fact,-5*fact,0},radius = .03};
+		["13"] = GraphNode{position = {-2*fact,-4*fact,0},radius = .03,color = green};
+		["3"] = GraphNode{position = {-2*fact,-5*fact,0},radius = .03,color = yellow};
 
 	},
 	{
-		DirectedEdge("012345", "01234");
-		DirectedEdge("01234", "0123");
-		DirectedEdge("0123", "123");
-		DirectedEdge("0123", "012");
-		DirectedEdge("123", "13");
-		DirectedEdge("123", "23");
-		DirectedEdge("123", "12");
-		DirectedEdge("012", "12");
-		DirectedEdge("012", "02");
-		DirectedEdge("012", "01");
-		DirectedEdge("13", "3");
-		DirectedEdge("13", "1");
-		DirectedEdge("23", "3");
-		DirectedEdge("23", "2");
-		DirectedEdge("12", "1");
-		DirectedEdge("12", "2");
-		DirectedEdge("02", "2");
-		DirectedEdge("02", "0");
-		DirectedEdge("01", "1");
-		DirectedEdge("01", "0");
+		DirectedEdge("012345", "01234",{destColor=red});
+		DirectedEdge("01234", "0123",{destColor=teal});
+		DirectedEdge("0123", "123",{destColor=blue});
+		DirectedEdge("0123", "012",{destColor=purple});
+		DirectedEdge("123", "13",{destColor=green});
+		DirectedEdge("123", "23",{destColor=yellow});
+		DirectedEdge("123", "12",{destColor=purple});
+		DirectedEdge("012", "12",{destColor=blue});
+		DirectedEdge("012", "02",{destColor=yellow});
+		DirectedEdge("012", "01",{destColor=green});
+		DirectedEdge("13", "3",{destColor=yellow});
+		DirectedEdge("13", "1",{destColor=purple});
+		DirectedEdge("23", "3",{destColor=green});
+		DirectedEdge("23", "2",{destColor=purple});
+		DirectedEdge("12", "1",{destColor=green});
+		DirectedEdge("12", "2",{destColor=yellow});
+		DirectedEdge("02", "2",{destColor=blue});
+		DirectedEdge("02", "0",{destColor=green});
+		DirectedEdge("01", "1",{destColor=blue});
+		DirectedEdge("01", "0",{destColor=yellow});
 	}
 	)
 	g.actionArgs = {small_num = .55,damping = .80, c_mult = .02,desiredEdgeLength =.15, h_mult = 150}
 	gxform = Transform{
-		position = {1,1.75,0},
+		position = {2,1.75,0},
 		g.osg.root,
 	}	
 	RelativeTo.World:addChild(gxform)
