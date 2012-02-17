@@ -8,7 +8,7 @@ wand = Manipulators.Gadgeteer.Wand{position = "VJWand"}
 addManipulator(wand)
 switchToBasicFactory() 
 puzzleX = 2.7525
-puzzleY = 0
+puzzleY = -.125
 puzzleZ = 1.2
 all = addBurrPuzzle(puzzleX,puzzleY,puzzleZ)
 bounding = all:computeBound()
