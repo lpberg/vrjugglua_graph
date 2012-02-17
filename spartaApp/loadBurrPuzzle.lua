@@ -1,7 +1,7 @@
+local initPosTable = {}
 params = defineSimulationParameters{
 	maxStiffness = 300.0
 	}
-red = nil
 function addBurrPuzzle(deltaX,deltaY,deltaZ)
 	pieceBlue =Transform{
 		scale = 5.0,
@@ -113,3 +113,45 @@ function addBurrPuzzle(deltaX,deltaY,deltaZ)
 	}
 	return allPieces
 end
+
+local function getTransformForCoordinateFrame(coordinateFrame, node)
+	if node == nil then node = assert(knownInView(coordinateFrame)) end
+	if node:isSameKindAs(osg.MatrixTransform()) then
+		return node
+	else
+		return getTransformForCoordinateFrame(coordinateFrame, node.Child[1])
+	end
+end
+
+local function saveInitPoses()
+	initPosTable[yellow] = yellow.matrix
+	initPosTable[blue] = blue.matrix
+	initPosTable[green] = green.matrix
+	initPosTable[purple] =  purple.matrix
+	initPosTable[teal] =  teal.matrix
+	initPosTable[red] =  red.matrix
+end
+
+local function resetParts()
+	red.matrix = initPosTable[red]
+	blue.matrix = initPosTable[blue]
+	green.matrix = initPosTable[green]
+	teal.matrix = initPosTable[teal]
+	purple.matrix = initPosTable[purple]
+	yellow.matrix = initPosTable[yellow]
+end
+
+function setBackParts()
+	saveInitPoses()
+	local drawBtn = gadget.DigitalInterface("WMButtonHome")
+	while true do
+		repeat
+			Actions.waitForRedraw()
+		until drawBtn.justPressed
+		print("button pressed")
+		simulation:runFunctionWithSimulationPaused(resetParts)
+	end
+end
+
+
+	

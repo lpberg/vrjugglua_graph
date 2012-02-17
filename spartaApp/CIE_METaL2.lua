@@ -183,7 +183,7 @@ function fa()
 end
 createGraphVisualization()
 Actions.addFrameAction(fa)
-
+Actions.addFrameAction(setBackParts)
 simulation:startInSchedulerThread()
 			
 		
