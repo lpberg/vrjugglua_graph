@@ -66,11 +66,17 @@ function GraphPrototype:createChildFromCurrentState(name)
 	else
 		childPos = self:getNode(self.currentPath[#self.currentPath]).position
 	end
-	local rand = math.random(1,100)
-	rand = rand/1000
 	local myNodeRadius = self.nodes[1].radius or .01
-
-	self:addNodes({[name] = GraphNode{position = {childPos[1]+rand,childPos[2]-self.actionArgs.desiredEdgeLength,childPos[3]},radius = myNodeRadius}})
+	if (#self:getNode(self.currentPath[#self.currentPath]).children > 0) then
+		local lastChild = #self:getNode(self.currentPath[#self.currentPath]).children
+		childPos = self:getNode(self.currentPath[#self.currentPath]).children[lastChild].position
+		self:addNodes({[name] = GraphNode{position = {childPos[1]+.125,childPos[2],childPos[3]},radius = myNodeRadius}})
+	else
+		local rand = math.random(1,50)
+		rand = rand/1000
+		print(rand)
+		self:addNodes({[name] = GraphNode{position = {childPos[1]+rand,childPos[2]-self.actionArgs.desiredEdgeLength,childPos[3]},radius = myNodeRadius}})
+	end
 	self:addEdges({DirectedEdge(self.currentPath[#self.currentPath], name,(myNodeRadius/4))})
 end
 function GraphPrototype:printCurrentPath()
@@ -114,10 +120,10 @@ function GraphPrototype:updateCurrentState(state_name)
 		if (#self.currentPath > 1 and childCreatedThisExecution) then
 			-- local nodesOfInterest = self:getNodeWithChildren(self.currentPath[#self.currentPath - 1
 			local parent = self:getNode(self.currentPath[#self.currentPath - 1])
-			local lastC = self.actionArgs.c_mult
-			self.actionArgs.c_mult = 0
+			
+			--self.actionArgs.coulomb = false
 			self:performAction({parent})
-			self.actionArgs.c_mult = lastC
+			--self.actionArgs.coulomb = true
 			self:performAction(parent.children)
 		end
 		
