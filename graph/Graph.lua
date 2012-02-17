@@ -126,7 +126,7 @@ function GraphPrototype:updateCurrentState(state_name)
 			--self.actionArgs.coulomb = true
 			self:performAction(parent.children)
 		end
-		
+		self:updateHighlightedPath()
 	end
 end
 
@@ -136,8 +136,16 @@ function GraphPrototype:getEdge(srcname,destname)
 			return edge
 		end
 	end
-	print("edge not found in graph")
-	return nil
+	
+	if (self.nodes[srcname] ~= nil and self.nodes[destname] ~= nil) then
+		print("edge not found in graph...creating one..")
+		local myNodeRadius = self.nodes[1].radius or .01
+		self:addEdges({DirectedEdge(srcname, destname,(myNodeRadius/4))})
+		return self:getEdge(srcname,desname) 
+	else
+		print("could not create edge as one or both of node names are not currently nodes...:(")
+	end
+	
 end
 
 function GraphPrototype:getNode(nodename)
