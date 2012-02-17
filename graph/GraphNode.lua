@@ -29,9 +29,10 @@ function GNMT:__tostring()
 end
 
 function GraphNodeIndex:createOSG()
-	self.osgsphere = Sphere{
+	self.osgsphere = ColorSphere{
 		radius = self.radius,
-		position = {0, 0, 0}
+		position = {0, 0, 0},
+		color = self.color,
 	}
 	
 	self.indicators = osg.Switch()
@@ -44,6 +45,10 @@ function GraphNodeIndex:createOSG()
 		self.osgsphere,
 		self.indicators,
 	}
+end
+
+function GraphNodeIndex:setColor(color)
+	self.osgsphere:getDrawable(0):setColor(osg.Vec4(unpack(color)))
 end
 function GraphNodeIndex:highlight(val,childNum)
 	childNum = childNum or 0
