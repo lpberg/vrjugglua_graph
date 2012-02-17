@@ -46,6 +46,8 @@ local function getOSGBodyFromCoordinateFrame(body)
 	end
 end
 
+
+
  do
 	BodyIDTable[yellow] = yellow.id
 	table.insert(SimulationBodies,yellow)
@@ -72,32 +74,64 @@ end
 
 
 g = nil
+
 local function createGraphVisualization()
+	local fact = .15
 	g = Graph(
 	{
-		["02345"] = GraphNode{position = {1,1.5,0},radius = .03};
+		--x = 0
+		["012345"] = GraphNode{position = {0,0,0},radius = .03};
+		["01234"] = GraphNode{position = {0,-1*fact,0},radius = .03};
+		["0123"] = GraphNode{position = {0,-2*fact,0},radius = .03};
+		["12"] = GraphNode{position = {0,-4*fact,0},radius = .03};
+		["1"] = GraphNode{position = {0,-5*fact,0},radius = .03};
+		["2"] = GraphNode{position = {0,-6*fact,fact},radius = .03};
+		--x = 1
+		["012"] = GraphNode{position = {1*fact,-3*fact,0},radius = .03};
+		["02"] = GraphNode{position = {1*fact,-4*fact,0},radius = .03};
+		--x = 2
+		["01"] = GraphNode{position = {2*fact,-4*fact,0},radius = .03};
+		["0"] = GraphNode{position = {2*fact,-5*fact,0},radius = .03};
+		--x = -1
+		["123"] = GraphNode{position = {-1*fact,-3*fact,0},radius = .03};
+		["23"] = GraphNode{position = {-1*fact,-4*fact,0},radius = .03};
+		--x = -2
+		["13"] = GraphNode{position = {-2*fact,-4*fact,0},radius = .03};
+		["3"] = GraphNode{position = {-2*fact,-5*fact,0},radius = .03};
 
 	},
 	{
-
+		DirectedEdge("012345", "01234");
+		DirectedEdge("01234", "0123");
+		DirectedEdge("0123", "123");
+		DirectedEdge("0123", "012");
+		DirectedEdge("123", "13");
+		DirectedEdge("123", "23");
+		DirectedEdge("123", "12");
+		DirectedEdge("012", "12");
+		DirectedEdge("012", "02");
+		DirectedEdge("012", "01");
+		DirectedEdge("13", "3");
+		DirectedEdge("13", "1");
+		DirectedEdge("23", "3");
+		DirectedEdge("23", "2");
+		DirectedEdge("12", "1");
+		DirectedEdge("12", "2");
+		DirectedEdge("02", "2");
+		DirectedEdge("02", "0");
+		DirectedEdge("01", "1");
+		DirectedEdge("01", "0");
 	}
 	)
 	g.actionArgs = {small_num = .55,damping = .80, c_mult = .02,desiredEdgeLength =.15, h_mult = 150}
-	RelativeTo.World:addChild(g.osg.root)
+	gxform = Transform{
+		position = {1,1.75,0},
+		g.osg.root,
+	}	
+	RelativeTo.World:addChild(gxform)
 end
  
 
- 
--- local function PartInAssembley(body,assemblyCenter,threshold)
-	-- local bodyPos = getOSGBodyFromCoordinateFrame(body):getMatrix():getTrans()
-	-- local distance = (assemblyCenter - bodyPos):length()
-	-- print(distance)
-	-- if distance < threshold then
-		-- return true
-	-- else
-		-- return false
-	-- end
--- end
 local function PartInAssembley(body,threshold)
 	local initPos = initPosById[body]
 	local bodyPos = getOSGBodyFromCoordinateFrame(body):getMatrix():getTrans()
@@ -126,7 +160,8 @@ end
 
 function KeepTrackofState()
 	setupInitPositions()
-	g:updateCurrentState(g.nodes[1].name)
+	-- g:updateCurrentState(g.nodes[1].name)
+	g:updateCurrentState(getCurrentState())
 	local counter = 0
 	local state = getCurrentState()
 	while true do
