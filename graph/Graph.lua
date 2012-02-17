@@ -77,7 +77,7 @@ function GraphPrototype:createChildFromCurrentState(name)
 		print(rand)
 		self:addNodes({[name] = GraphNode{position = {childPos[1]+rand,childPos[2]-self.actionArgs.desiredEdgeLength,childPos[3]},radius = myNodeRadius}})
 	end
-	self:addEdges({DirectedEdge(self.currentPath[#self.currentPath], name,(myNodeRadius/4))})
+	self:addEdges({DirectedEdge(self.currentPath[#self.currentPath], name,{radius = (myNodeRadius/(4*2))})})
 end
 function GraphPrototype:printCurrentPath()
 	for _,v in ipairs(self.currentPath) do
@@ -136,6 +136,7 @@ function GraphPrototype:updateCurrentState(state_name)
 			self:performAction(parent.children)
 		end
 		self:updateHighlightedPath()
+		self:updateColorOfChildren(state_name)
 	end
 end
 
@@ -149,7 +150,7 @@ function GraphPrototype:getEdge(srcname,destname)
 	if (self.nodes[srcname] ~= nil and self.nodes[destname] ~= nil) then
 		print("edge not found in graph...creating one..")
 		local myNodeRadius = self.nodes[1].radius or .01
-		self:addEdges({DirectedEdge(srcname, destname,(myNodeRadius/4))})
+		self:addEdges({DirectedEdge(srcname, destname,{radius = (myNodeRadius/(8))})})
 		return self:getEdge(srcname,desname) 
 	else
 		print("could not create edge as one or both of node names are not currently nodes...:(")
