@@ -8,7 +8,7 @@ wand = Manipulators.Gadgeteer.Wand{position = "VJWand"}
 addManipulator(wand)
 switchToBasicFactory() 
 puzzleX = 2.7525
-puzzleY = 0
+puzzleY = -.125
 puzzleZ = 1.2
 all = addBurrPuzzle(puzzleX,puzzleY,puzzleZ)
 bounding = all:computeBound()
@@ -46,6 +46,8 @@ local function getOSGBodyFromCoordinateFrame(body)
 	end
 end
 
+
+
  do
 	BodyIDTable[yellow] = yellow.id
 	table.insert(SimulationBodies,yellow)
@@ -72,32 +74,70 @@ end
 
 
 g = nil
+
 local function createGraphVisualization()
+	local fact = .15
+	local green = {(154/255),(205/255),(50/255),1}
+	local yellow = {1,(215/255),0,1}
+	local red = {1,0,0,1}
+	local teal = {0,(206/255),(209/255),1}
+	local purple = {(147/255),(112/255),(219/255),1}
+	local blue = {0,0,1,1}
 	g = Graph(
 	{
-		["012345"] = GraphNode{position = {1,1.5,0},radius = .03};
+		--x = 0
+		["012345"] = GraphNode{position = {0,0,0},radius = .03};
+		["01234"] = GraphNode{position = {0,-1*fact,0},radius = .03,color = red}; 
+		["0123"] = GraphNode{position = {0,-2*fact,0},radius = .03,color = teal};
+		["12"] = GraphNode{position = {0,-4*fact,0},radius = .03,color = purple}; 
+		["1"] = GraphNode{position = {0,-5*fact,-.12},radius = .03,color = green}; 
+		["2"] = GraphNode{position = {.1,-6*fact,fact},radius = .03,color = blue}; 
+		--x = 1
+		["012"] = GraphNode{position = {1*fact,-3*fact,0},radius = .03,color = purple}; 
+		["02"] = GraphNode{position = {1*fact,-4*fact,0},radius = .03,color = yellow}; 
+		--x = 2
+		["01"] = GraphNode{position = {2*fact,-4*fact,0},radius = .03,color = green}; 
+		["0"] = GraphNode{position = {2*fact,-5*fact,0},radius = .03,color = yellow};
+		--x = -1
+		["123"] = GraphNode{position = {-1*fact,-3*fact,0},radius = .03,color = blue};
+		["23"] = GraphNode{position = {-1*fact,-4*fact,0},radius = .03,color = yellow}; 
+		--x = -2
+		["13"] = GraphNode{position = {-2*fact,-4*fact,0},radius = .03,color = green};
+		["3"] = GraphNode{position = {-2*fact,-5*fact,0},radius = .03,color = yellow};
 
 	},
 	{
-
+		DirectedEdge("012345", "01234",{color=green,destColor=red});
+		DirectedEdge("01234", "0123",{color=green,destColor=teal});
+		DirectedEdge("0123", "123",{color=green,destColor=blue});
+		DirectedEdge("0123", "012",{destColor=purple});
+		DirectedEdge("123", "13",{color=green,destColor=green});
+		DirectedEdge("123", "23",{destColor=yellow});
+		DirectedEdge("123", "12",{destColor=purple});
+		DirectedEdge("012", "12",{destColor=blue});
+		DirectedEdge("012", "02",{destColor=yellow});
+		DirectedEdge("012", "01",{destColor=green});
+		DirectedEdge("13", "3",{destColor=yellow});
+		DirectedEdge("13", "1",{color=green,destColor=purple});
+		DirectedEdge("23", "3",{destColor=green});
+		DirectedEdge("23", "2",{destColor=purple});
+		DirectedEdge("12", "1",{destColor=green});
+		DirectedEdge("12", "2",{destColor=yellow});
+		DirectedEdge("02", "2",{destColor=blue});
+		DirectedEdge("02", "0",{destColor=green});
+		DirectedEdge("01", "1",{destColor=blue});
+		DirectedEdge("01", "0",{destColor=yellow});
 	}
 	)
 	g.actionArgs = {small_num = .55,damping = .80, c_mult = .02,desiredEdgeLength =.15, h_mult = 150}
-	RelativeTo.World:addChild(g.osg.root)
+	gxform = Transform{
+		position = {2,1.75,0},
+		g.osg.root,
+	}	
+	RelativeTo.World:addChild(gxform)
 end
  
 
- 
--- local function PartInAssembley(body,assemblyCenter,threshold)
-	-- local bodyPos = getOSGBodyFromCoordinateFrame(body):getMatrix():getTrans()
-	-- local distance = (assemblyCenter - bodyPos):length()
-	-- print(distance)
-	-- if distance < threshold then
-		-- return true
-	-- else
-		-- return false
-	-- end
--- end
 local function PartInAssembley(body,threshold)
 	local initPos = initPosById[body]
 	local bodyPos = getOSGBodyFromCoordinateFrame(body):getMatrix():getTrans()
@@ -126,7 +166,8 @@ end
 
 function KeepTrackofState()
 	setupInitPositions()
-	g:updateCurrentState(g.nodes[1].name)
+	-- g:updateCurrentState(g.nodes[1].name)
+	g:updateCurrentState(getCurrentState())
 	local counter = 0
 	local state = getCurrentState()
 	while true do
@@ -149,7 +190,6 @@ end
 createGraphVisualization()
 Actions.addFrameAction(fa)
 Actions.addFrameAction(setBackParts)
-
 simulation:startInSchedulerThread()
 			
 		
