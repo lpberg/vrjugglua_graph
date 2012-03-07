@@ -9,7 +9,7 @@ function addBurrPuzzle(deltaX,deltaY,deltaZ)
 		Transform{
 			position = {-.1,.3,0},
 			orientation = AngleAxis(Degrees(90), Axis{0.0, 0.0, 1.0}),
-			Model ([[V:\Applications\Vances_group\GOALI\Burr\Block3.ive]])
+			Model ([[V:\Applications\vancegroup\GOALI\Burr\Block3.ive]])
 		}
 	}
 	pieceYellow = Transform{
@@ -21,7 +21,7 @@ function addBurrPuzzle(deltaX,deltaY,deltaZ)
 			Transform{
 				position = {-.1,0,0},
 				orientation = AngleAxis(Degrees(-90), Axis{1.0, 0.0, 0.0}),
-				Model ([[V:\Applications\Vances_group\GOALI\Burr\Block1.ive]])
+				Model ([[V:\Applications\vancegroup\GOALI\Burr\Block1.ive]])
 			}
 		}
 	}
@@ -31,7 +31,7 @@ function addBurrPuzzle(deltaX,deltaY,deltaZ)
 		 Transform{
 			position = {-.08999,.2999,0.011},
 			orientation = AngleAxis(Degrees(90), Axis{1.0, 0.0, 0.0}),
-			Model ([[V:\Applications\Vances_group\GOALI\Burr\Block2.ive]])
+			Model ([[V:\Applications\vancegroup\GOALI\Burr\Block2.ive]])
 		}
 	}
 	piecePurple = Transform{
@@ -43,7 +43,7 @@ function addBurrPuzzle(deltaX,deltaY,deltaZ)
 			Transform{
 				position = {.1,.3,0},
 				orientation = AngleAxis(Degrees(180), Axis{1.0, 0.0, 0.0}),
-				Model ([[V:\Applications\Vances_group\GOALI\Burr\Block4.ive]])
+				Model ([[V:\Applications\vancegroup\GOALI\Burr\Block4.ive]])
 			}
 		}
 	}
@@ -53,7 +53,7 @@ function addBurrPuzzle(deltaX,deltaY,deltaZ)
 		Transform{
 			position = {-.0895,.3,-.009},
 			orientation = AngleAxis(Degrees(180), Axis{1.0, 0.0, 0.0}),
-			Model ([[V:\Applications\Vances_group\GOALI\Burr\Block5.ive]])
+			Model ([[V:\Applications\vancegroup\GOALI\Burr\Block5.ive]])
 		}
 	}
 	pieceRed = Transform{
@@ -62,7 +62,7 @@ function addBurrPuzzle(deltaX,deltaY,deltaZ)
 		Transform{
 			position = {-.36/4,1.237/4,.0015/4},
 			orientation = AngleAxis(Degrees(90), Axis{0.0, 1.0, 0.0}),
-			Model ([[V:\Applications\Vances_group\GOALI\Burr\BaseBlock.ive]])
+			Model ([[V:\Applications\vancegroup\GOALI\Burr\BaseBlock.ive]])
 		}
 	}
 	
