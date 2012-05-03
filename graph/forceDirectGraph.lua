@@ -1,6 +1,5 @@
 require("Actions")
 
-	
 function ForceDirectedGraph(g,args)
 	local function Coulomb_repulsion(vec1,vec2,mult)
 		mult = mult or 1
@@ -28,30 +27,30 @@ function ForceDirectedGraph(g,args)
 	end
 	--setting up local vars to be used later 
 	args.c_mult = args.c_mult or 10
-	print(args.c_mult)
+	-- print(args.c_mult)
 	args.h_mult = args.h_mult or 50
-	print(args.h_mult)
+	-- print(args.h_mult)
 	args.coulomb = args.coulomb or true
-	print(args.coulomb)
+	-- print(args.coulomb)
 	args.hooks = args.hooks or true
-	print(args.hooks)
+	-- print(args.hooks)
 	args.small_num = args.small_num or .20
-	print(args.small_num)
+	-- print(args.small_num)
 	args.damping = args.damping or .80
-	print(args.damping)
+	-- print(args.damping)
 	
 	local total_kinetic_energy = 0
 	local timestep = Actions.waitForRedraw()
 	
 	print("Force Directed Graph Layout Algorithm: Started")
-	 repeat
+	repeat
 		--reseting system total_kinetic_energy to zero
-		 total_kinetic_energy = 0 
-		 for _, node in ipairs(g.nodes) do
+		total_kinetic_energy = 0 
+		for _, node in ipairs(g.nodes) do
 			 --reset net force on current note (to recalculate)
-			 local net_force_on_node = osg.Vec3(0,0,0) 
-			 --get this nodes position
-			 local nodePos = osg.Vec3(unpack(node.position))
+			local net_force_on_node = osg.Vec3(0,0,0) 
+			--get this nodes position
+			local nodePos = osg.Vec3(unpack(node.position))
 			 --calculate Coulomb Forces on node
 			if(args.coulomb) then
 				 for _, everyOtherNode in ipairs(g.nodes) do

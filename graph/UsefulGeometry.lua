@@ -26,20 +26,6 @@ CylinderFromHereToThere = function(here, there,rad,mycolor)
 	return xform
 end
 YellowCylinderFromHereToThere = function(here, there,rad) 
-	-- local function TransparentObject(group)
-		-- local state = group:getOrCreateStateSet()
-		-- state:setRenderingHint(2) -- transparent bin
-
-		-- local CONSTANT_ALPHA = 0x8003
-		-- local ONE_MINUS_CONSTANT_ALPHA = 0x8004
-		-- local bf = osg.BlendFunc()
-		-- bf:setFunction(CONSTANT_ALPHA, ONE_MINUS_CONSTANT_ALPHA)
-		-- state:setAttributeAndModes(bf)
-
-		-- local bc = osg.BlendColor(osg.Vec4(1.0, 1.0, 1.0, arg.alpha or 0.5))
-		-- state:setAttributeAndModes(bc)
-		-- group:setStateSet(state)
-	-- end
 	local Cylinder = function (a)
 		local pos = osg.Vec3(0.0, 0.0, 0.0)
 		if a.position then

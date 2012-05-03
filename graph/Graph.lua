@@ -1,30 +1,22 @@
-
--- It may help to think of the __index table as the prototype object
 local GraphPrototype = {}
 local GMT = {__index = GraphPrototype}
-math.randomseed( os.time() )
+math.randomseed(os.time())
 math.random()
--- I factored this out into a method because you'll probably want to do this at some point
--- after initial construction, and this prevents code duplication.
+
 function GraphPrototype:addNodes(nodes)
 	for nodename, node in pairs(nodes) do
 		assert(self.nodes[nodename] == nil, "Node name already used!")
-
 		-- Add to the graph's nodes table by name
 		self.nodes[nodename] = node
-
 		-- For fun, let's also keep them in an array-style, too,
 		-- so #(graph.nodes) is useful and you can
 		-- randomly pick a node by generating a number.
 		table.insert(self.nodes, node)
-
 		-- Tell each node its name, in case it's curious
 		node.name = nodename
-
 		-- Add the node to the scenegraph
 		self.osg.noderoot:addChild(node.osg)
-		
-		print("Graph: Added GraphNode", node.name)
+		print("Graph: Added GraphNode:", node.name)
 	end
 end
 
@@ -38,28 +30,32 @@ function GraphPrototype:getPathAsEdgeTable(args)
 	end
 	return edgeTable
 end
+
 function GraphPrototype:disablePathHighlighting()
 	for _, edge in ipairs(self.edges) do
 		edge:highlight(false)
 	end
 end
+
 function GraphPrototype:disableNodeHighlighting()
 	for _, node in ipairs(self.nodes) do
 		node:highlight(false)
 	end
 end
+
 function GraphPrototype:highlightPath(edgeTable)
 	for _, edge in ipairs(edgeTable) do
 		edge:highlight(true)
 	end
 end
+
 function GraphPrototype:updateHighlightedPath()
 	self:disablePathHighlighting()
 	self:highlightPath(self:getPathAsEdgeTable(self.currentPath))
 end
+
 function GraphPrototype:createChildFromCurrentState(name)
-	-- if this is first node , set pos default to 000 - bad idea
-	print("creating new node")
+	print("Creating new node")
 	local childPos
 	if(#self.currentPath == 0) then
 		childPos = {0,0,0}
@@ -79,11 +75,13 @@ function GraphPrototype:createChildFromCurrentState(name)
 	end
 	self:addEdges({DirectedEdge(self.currentPath[#self.currentPath], name,{radius = (myNodeRadius/(4*2))})})
 end
+
 function GraphPrototype:printCurrentPath()
 	for _,v in ipairs(self.currentPath) do
 		print(v)
 	end
 end
+
 function GraphPrototype:updateColorOfChildren(name)
 	local node = self.nodes[name]
 	for _,child in ipairs(node.children) do
@@ -93,9 +91,10 @@ function GraphPrototype:updateColorOfChildren(name)
 		end
 	end
 end
+
 function GraphPrototype:updateCurrentState(state_name)
 	local childCreatedThisExecution = false
-	--Does the node / state exist in the graph yet?, if no create one
+	--Does the node / state exist in the graph yet?, if not then create one
 	if (self:getNode(state_name) == nil) then
 		self:createChildFromCurrentState(state_name)
 		childCreatedThisExecution = true

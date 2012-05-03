@@ -4,8 +4,8 @@ require("TransparentGroup")
 vrjLua.appendToModelSearchPath(getScriptFilename())
 dofile(vrjLua.findInModelSearchPath([[loadBurrPuzzle.lua]]))
 dofile(vrjLua.findInModelSearchPath([[..\graph\loadGraphFiles.lua]]))
-wand = Manipulators.Gadgeteer.Wand{position = "VJWand"}
-addManipulator(wand)
+-- wand = Manipulators.Gadgeteer.Wand{position = "VJWand"}
+-- addManipulator(wand)
 switchToBasicFactory() 
 puzzleX = 2.7525
 puzzleY = 0
