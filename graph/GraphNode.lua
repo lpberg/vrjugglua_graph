@@ -39,7 +39,6 @@ function GraphNodeIndex:createOSG()
 	self.indicators:addChild(RedIndicatorSphere(self.radius*2))
 	self.indicators:setValue(0,false)
 	
-	
 	self.osg = Transform{
 		position = self.position,
 		self.osgsphere,
@@ -48,8 +47,10 @@ function GraphNodeIndex:createOSG()
 end
 
 function GraphNodeIndex:setColor(color)
+	self.color = color
 	self.osgsphere:getDrawable(0):setColor(osg.Vec4(unpack(color)))
 end
+
 function GraphNodeIndex:highlight(val,childNum)
 	childNum = childNum or 0
 	self.indicators:setValue(childNum,val)
@@ -61,10 +62,7 @@ function GraphNodeIndex:setPosition(pos)
 end
 
 function GraphNodeIndex:updateOSG()
-	--update node pos
 	self.osg:setPosition(osg.Vec3d(unpack(self.position)))
-	-- TODO
-	-- call update on all egdes
 	for _,edge in ipairs(self.edges) do
 		edge:updateOSG()
 	end
@@ -73,7 +71,9 @@ end
 
 GraphNode = function(node)
 	-- default value
+	
 	node.radius = node.radius or 0.125
+	node.color = node.color or {1,1,1,1}
 	setmetatable(node, GNMT)
 	node:createOSG()
 	node.parents = {}
