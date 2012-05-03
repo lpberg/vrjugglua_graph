@@ -41,11 +41,12 @@ function DirectedEdgeIndex:updateOSG()
 	self.srcpos = self.src.position
 	self.destpos = self.dest.position
 	--update normal edge graphic
-	self.indicators.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius)
+	self.indicators.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius,self.color)
 	--update highlighted edge graphic
 	self.indicators.Child[2] = YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius)
 	--DEDebug "updateOSG is done!"
 end
+
 function DirectedEdgeIndex:highlight(val)
 	if val then
 		self.indicators:setSingleChildOn(1)
@@ -57,6 +58,13 @@ end
 DirectedEdge = function(source, destination,args)
 	-- setmetatable returns the table it is given after it modifies it by setting the metatable
 	-- so this is a commonly-seen pattern
-	args.destColor = args.destColor or {1,1,1,0}
-	return setmetatable({srcname = source, destname = destination, radius = args.radius,color = args.color, destColor = args.destColor}, DEMT)
+	local _radius = 0.025
+	local _color = {(105/255),(105/255),(105/255),0} --gray color default
+	local _destColor = nil
+	if args ~= nil then
+		_radius = args.radius or _radius
+		_color = args.color or _color
+		_destColor = args.destColor or _destColor
+	end
+	return setmetatable({srcname = source, destname = destination, radius = _radius, color = _color, destColor = _destColor}, DEMT)
 end
