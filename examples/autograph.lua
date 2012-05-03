@@ -21,21 +21,20 @@ g = Graph(
 
 
 g.actionArgs = {small_num = .55,damping = .80, c_mult = 2}
--- local function randColor()
-	-- local r = math.random(0,1)
-	-- local b = math.random(0,1)
-	-- local g = math.random(0,1)
-	-- local vec4 = osg.Vec4(r,b,g,1)
-	-- print(vec4)
-	-- return {vec4:x(),vec4:y(),vec4:z()}
--- end
+local function randColor()
+	local r = osgLua.GLfloat(math.random(-100,100)/100)
+	local b = osgLua.GLfloat(math.random(-100,100)/100)
+	local g = osgLua.GLfloat(math.random(-100,100)/100)
+	local a = osgLua.GLfloat(math.random(-100,100)/100)
+	return {r,g,b,a}
+end
 
 -- Add random node.
 local randomNodeNum = 1
 local function addRandomNode(graph)
 	local nodename = ("random_%d"):format(randomNodeNum)
 	graph:addNodes{
-		[nodename] = GraphNode{position = {math.random(-2,2), math.random(-2,2), math.random(-2,2)}}
+		[nodename] = GraphNode{position = {math.random(-2,2), math.random(-2,2), math.random(-2,2)},color = randColor()}
 	}
 	randomNodeNum = randomNodeNum + 1
 end
