@@ -23,7 +23,6 @@ function DirectedEdgeIndex:createOSG()
 	self.destpos = self.dest.position
 	
 	self.indicators = osg.Switch()
-	self.radius = self.radius or .0025
 	self.indicators:addChild(CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius,self.color))
 	self.indicators:addChild(YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius))
 	self.indicators:setSingleChildOn(0)
