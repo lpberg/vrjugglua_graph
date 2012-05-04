@@ -22,13 +22,17 @@ function DirectedEdgeIndex:createOSG()
 	self.srcpos = self.src.position
 	self.destpos = self.dest.position
 	
+	self.labelSwitch = osg.Switch()
+
+	self.labelSwitch:addChild(TextLabel(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)), self.labeltext, self.labelSize, self.radius, self.labelColor))
+	-- self.label:setAllChildOff()
 	self.indicators = osg.Switch()
 	self.indicators:addChild(CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius,self.color))
 	self.indicators:addChild(YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius))
 	self.indicators:setSingleChildOn(0)
-
 	self.osg = Transform{
 		self.indicators,
+		self.labelSwitch,
 	}
 end
 
@@ -41,6 +45,7 @@ function DirectedEdgeIndex:updateOSG()
 	self.srcpos = self.src.position
 	self.destpos = self.dest.position
 	-- update label graph
+	self.labelSwitch.Child[1] = TextLabel(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.labeltext,self.labelSize,self.radius,self.labelColor)
 	--update normal edge graphic
 	self.indicators.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius,self.color)
 	--update highlighted edge graphic
@@ -54,6 +59,14 @@ function DirectedEdgeIndex:highlight(val)
 	else
 		self.indicators:setSingleChildOn(0)
 	end
+end
+
+function DirectedEdgeIndex:showLabel()
+	self.labelSwitch:setAllChildrenOn()
+end
+
+function DirectedEdgeIndex:hideLabel()
+	self.labelSwitch:setAllChildrenOff()
 end
 
 DirectedEdge = function(source, destination,args)
