@@ -1,4 +1,26 @@
 require("TransparentGroup")
+require("Text")
+
+TextLabel = function(here, there, val, size, zPlus, color)
+
+	local midpoint = (here + there) * 0.5
+	local mycolor
+	if color ~= nil then
+		mycolor = osg.Vec4(unpack(color))
+	else
+		mycolor = osg.Vec4(1.0, 1.0, 1.0, 1.0)
+	end
+	local vals = val -- fix for an issue with variables
+	texts = TextGeode{
+		tostring(vals),
+		color = mycolor,
+		lineHeight = size,
+		position = {midpoint:x(), midpoint:y(), midpoint:z()+zPlus},
+		font = Font("DroidSans")
+	}
+	return texts
+end
+
 
 local Cylinder = function (a)
 	local pos = osg.Vec3(0.0, 0.0, 0.0) 
