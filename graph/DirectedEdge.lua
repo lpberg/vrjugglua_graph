@@ -34,12 +34,13 @@ end
 
 function DirectedEdgeIndex:updateOSG()
 	if self.srcpos == self.src.position and self.destpos == self.dest.position then
-		--DEDebug "updateOSG had nothing to do"
+		--No need to update
 		return
 	end
 	--update the internal pos variables
 	self.srcpos = self.src.position
 	self.destpos = self.dest.position
+	-- update label graph
 	--update normal edge graphic
 	self.indicators.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius,self.color)
 	--update highlighted edge graphic
