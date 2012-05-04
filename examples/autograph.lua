@@ -46,7 +46,7 @@ function addRandomEdge(graph)
 	if fromNum ~= toNum then
 		graph:addEdges{
 			-- Our simple DirectedEdge constructor wants node names, so we'll get those names from the nodes
-			DirectedEdge(graph.nodes[fromNum].name, graph.nodes[toNum].name,{color = randColor()})
+			DirectedEdge(graph.nodes[fromNum].name, graph.nodes[toNum].name,{color = randColor(), labeltext = "label" ,labelSize=.15})
 		}
 	else
 		print "Whoops, rolled the same number twice. Not actually adding an edge."
