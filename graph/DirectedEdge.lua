@@ -74,11 +74,18 @@ DirectedEdge = function(source, destination,args)
 	-- so this is a commonly-seen pattern
 	local _radius = 0.025
 	local _color = {(105/255),(105/255),(105/255),0} --gray color default
+	local _labelColor = {1,1,1,1}
+	local _label = ""
+	local _labelSize = .25
 	local _destColor = nil
+
 	if args ~= nil then
 		_radius = args.radius or _radius
 		_color = args.color or _color
+		_labelColor = args.labelColor or _labelColor
+		_labelSize = args.labelSize or _labelSize
+		_label = args.labeltext or _label
 		_destColor = args.destColor or _destColor
 	end
-	return setmetatable({srcname = source, destname = destination, radius = _radius, color = _color, destColor = _destColor}, DEMT)
+	return setmetatable({srcname = source, destname = destination, radius = _radius, color = _color, destColor = _destColor, labelColor = _labelColor, labelSize = _labelSize, labeltext = _label}, DEMT)
 end
