@@ -110,7 +110,6 @@ function GraphPrototype:updateCurrentState(state_name)
 		local currentStateFound = false
 		for idx,stateName in ipairs(self.currentPath) do
 			if(currentStateFound == false) then
-				-- self.currentPath[idx] = self.currentPath[idx]
 				if(stateName == state_name) then
 					currentStateFound = true
 				end
@@ -213,8 +212,6 @@ function GraphPrototype:addEdges(edges)
 	end
 end
 
-
-	
 function GraphPrototype:ForceDirectedGraph(args,nodes)
 	local nodes = nodes or self.nodes
 	local function Coulomb_repulsion(vec1,vec2,mult)
