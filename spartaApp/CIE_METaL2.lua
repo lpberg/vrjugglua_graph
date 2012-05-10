@@ -107,7 +107,7 @@ local function createGraphVisualization()
 
 	},
 	{
-		DirectedEdge("012345", "01234",{destColor=red});
+		DirectedEdge("012345", "01234",{destColor=red, radius=.007});
 		DirectedEdge("01234", "0123",{destColor=teal});
 		DirectedEdge("0123", "123",{destColor=blue});
 		DirectedEdge("0123", "012",{destColor=purple});
@@ -149,7 +149,51 @@ local function PartInAssembley(body,threshold)
 	end
 end
 
-function getCurrentState()
+local function PartRemoved(body,threshold)
+	local initPos = initPosById[body]
+	local bodyPos = getOSGBodyFromCoordinateFrame(body):getMatrix():getTrans()
+	local distance = (initPos - bodyPos):length()
+	if distance < threshold then
+		return false
+	else
+		return true
+	end
+end
+
+local function WasInLastState(fullstring,element)
+	local found_idx = string.find(fullstring,element)
+	if found_idx ~= nil then
+		return true
+	else
+		return false
+	end
+end
+
+
+local old_state = ""
+function getCurrentStateStatic()
+	local state = old_state
+	local bodies_removed = {}
+	for _,body in ipairs(SimulationBodies) do
+		if(PartRemoved(body,2)) then
+			table.insert(bodies_removed,BodyIDTable[body])
+		end
+	end
+	if #bodies_removed < 1 then
+		state = ""
+	end
+	
+	for _,bodyid in ipairs(bodies_removed) do
+		if not WasInLastState(old_state,tostring(bodyid)) then
+			state = state..bodyid
+		end
+	end
+	old_state = state
+	return state
+end
+
+
+function getCurrentStateDynamic()
 	local state=""
 	local bodies_in_state = {}
 	for _,body in ipairs(SimulationBodies) do
@@ -166,16 +210,16 @@ end
 
 function KeepTrackofState()
 	setupInitPositions()
-	-- g:updateCurrentState(g.nodes[1].name)
-	g:updateCurrentState(getCurrentState())
+	g:updateCurrentState(getCurrentStateDynamic())
 	local counter = 0
-	local state = getCurrentState()
+	local state = getCurrentStateDynamic()
 	while true do
 		if counter > 10 then
-			local newState = getCurrentState()
+			local newState = getCurrentStateDynamic()
 			if state ~= newState then
 				state = newState
-				print("State Change:"..state)
+				print("Dyanmic State Change:"..state)
+				print("Static State Change: "..getCurrentStateStatic())
 				g:updateCurrentState(state)
 			end
 			counter = 0
