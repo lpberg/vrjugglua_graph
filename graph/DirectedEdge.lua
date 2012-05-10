@@ -79,7 +79,7 @@ end
 DirectedEdge = function(source, destination,args)
 	-- setmetatable returns the table it is given after it modifies it by setting the metatable
 	-- so this is a commonly-seen pattern
-	local _radius = 0.025
+	local _radius = 0.007
 	local _color = {(105/255),(105/255),(105/255),0} --gray color default
 	local _labelColor = {1,1,1,1}
 	local _highlightColor = {1,1,0,1}
