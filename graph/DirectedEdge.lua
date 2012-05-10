@@ -25,7 +25,7 @@ function DirectedEdgeIndex:createOSG()
 	self.labelSwitch = osg.Switch()
 
 	self.labelSwitch:addChild(TextLabel(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)), self.labeltext, self.labelSize, self.radius, self.labelColor))
-	-- self.label:setAllChildOff()
+	self.labelSwitch:setAllChildrenOff()
 	self.indicators = osg.Switch()
 	self.indicators:addChild(CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius,self.color))
 	self.indicators:addChild(YellowCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius))
