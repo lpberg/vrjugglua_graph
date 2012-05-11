@@ -159,6 +159,14 @@ local function PartRemoved(body,threshold)
 		return true
 	end
 end
+function table.contains(table, element)
+	for _, value in pairs(table) do
+		if value == element then
+		  return true
+		end
+	end
+	return false
+end
 
 local function WasInLastState(fullstring,element)
 	local found_idx = string.find(fullstring,element)
@@ -170,26 +178,38 @@ local function WasInLastState(fullstring,element)
 end
 
 
-local old_state = ""
+local old_state_table = {}
 function getCurrentStateStatic()
-	local state = old_state
+	local state_string = ""
+	local state_table = {}
 	local bodies_removed = {}
+	--find out which bodies are outside 'assembly area'
 	for _,body in ipairs(SimulationBodies) do
-		if(PartRemoved(body,2)) then
+		if(PartRemoved(body,.5)) then
 			table.insert(bodies_removed,BodyIDTable[body])
 		end
 	end
+	--if no bodies outside 'assembly area' state is null (= "")
 	if #bodies_removed < 1 then
 		state = ""
 	end
-	
-	for _,bodyid in ipairs(bodies_removed) do
-		if not WasInLastState(old_state,tostring(bodyid)) then
-			state = state..bodyid
+	--if body was removed last check and still is removed - add it to state_string
+	for _,bodyid in ipairs(old_state_table) do
+		if table.contains(bodies_removed,bodyid) then
+			table.insert(state_table,bodyid)
+			state_string = state_string..bodyid
 		end
 	end
-	old_state = state
-	return state
+	--jconf s:/jconf30/METaL.tracked.stereo.reordered.withwand.jconf
+	--for every element in bodies removed, if not in last state, add it to end
+	for _,bodyid in ipairs(bodies_removed) do
+		if not table.contains(old_state_table,bodyid) then
+			table.insert(state_table,bodyid)
+			state_string = state_string..bodyid
+		end
+	end
+	old_state_table = state_table
+	return state_string
 end
 
 
@@ -197,7 +217,7 @@ function getCurrentStateDynamic()
 	local state=""
 	local bodies_in_state = {}
 	for _,body in ipairs(SimulationBodies) do
-		if(PartInAssembley(body,2)) then
+		if(PartInAssembley(body,.5)) then
 			table.insert(bodies_in_state,BodyIDTable[body])
 		end
 	end
