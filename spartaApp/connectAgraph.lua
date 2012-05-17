@@ -8,10 +8,14 @@ local wavPath = vrjLua.findInModelSearchPath("tiny.wav")
 local myWavSound = SoundWav(wavPath)
 local wavPath2 = vrjLua.findInModelSearchPath("tiny1.wav")
 local myWavSound2 = SoundWav(wavPath2)
+local wavPath3 = vrjLua.findInModelSearchPath("new.wav")
+local myWavSound3 = SoundWav(wavPath3)
 g = Graph(
 	{
 		["one"] = GraphNode{position = {0,0,0},radius = .13};
 		["two"] = GraphNode{position = {0,1,0},radius = .13};
+		["three"] = GraphNode{position = {1,1,0},radius = .13};
+		["four"] = GraphNode{position = {1,0,0},radius = .13};
 
 	},
 	{
@@ -19,8 +23,8 @@ g = Graph(
 
 	}
 )
-
 RelativeTo.World:addChild(g.osg.root)
+
 local hoveredNode = nil
 Actions.addFrameAction(
 	function()
@@ -51,10 +55,25 @@ Actions.addFrameAction(
 		end
 	end
 )
-local tempXFORM = Transform{}
-
 
 Actions.addFrameAction(function()
+	local drawBtn = gadget.DigitalInterface("VJButton1")
+	local device = gadget.PositionInterface("VJWand")
+	while true do
+		repeat
+			Actions.waitForRedraw()
+		until drawBtn.justPressed
+		local newPos = device.position - osgnav.position
+		local newName = tostring(newPos:x()+math.random(1,100))
+		g:addNodes{
+			[newName] = GraphNode{position = {newPos:x(),newPos:y(),newPos:z()+.1},radius = .13};
+		}
+		myWavSound3:trigger(1)
+	end
+end)	
+
+Actions.addFrameAction(function()
+	local tempXFORM = Transform{}
 	local drawBtn = gadget.DigitalInterface("VJButton2")
 	local device = gadget.PositionInterface("VJWand")
 	while true do
