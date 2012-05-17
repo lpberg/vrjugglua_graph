@@ -54,6 +54,11 @@ end
 function GraphNodeIndex:highlight(val,childNum)
 	childNum = childNum or 0
 	self.indicators:setValue(childNum,val)
+	if val then
+		self.isHighlighted = true
+	else
+		self. isHighlighted = false
+	end
 end
 
 function GraphNodeIndex:setPosition(pos)
@@ -80,5 +85,6 @@ GraphNode = function(node)
 	node.children = {}
 	node.edges = {}
 	node.velocity = osg.Vec3(0,0,0)
+	node.isHighlighted = false
 	return node
 end

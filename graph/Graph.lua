@@ -183,32 +183,46 @@ function GraphPrototype:performAction(nodes)
 	Actions.addFrameAction(addFrameActionNow)
 end
 
+function GraphPrototype:edgeExists(newedge)
+	local found = false
+	for _, edge in ipairs(self.edges) do 
+		if edge.srcname == newedge.srcname and edge.destname == newedge.destname then
+			found = true
+		end
+	end
+	return found
+end
+		
+	
 
 function GraphPrototype:addEdges(edges)
 	for _, edge in ipairs(edges) do
-		-- Look up the source and destination graphnode by name.
-		assert(self.nodes[edge.srcname], "Source name of edge unknown!")
-		edge.src = self.nodes[edge.srcname]
+		if not self:edgeExists(edge) then
+			-- Look up the source and destination graphnode by name.
+			assert(self.nodes[edge.srcname], "Source name of edge unknown!")
+			edge.src = self.nodes[edge.srcname]
 
-		assert(self.nodes[edge.destname], "Destination name of edge unknown!")
-		edge.dest = self.nodes[edge.destname]
+			assert(self.nodes[edge.destname], "Destination name of edge unknown!")
+			edge.dest = self.nodes[edge.destname]
 
-		-- The source node is told about this edge and its child
-		table.insert(edge.src.edges, edge)
-		table.insert(edge.src.children, edge.dest)
+			-- The source node is told about this edge and its child
+			table.insert(edge.src.edges, edge)
+			table.insert(edge.src.children, edge.dest)
 
-		-- The destination node is told about this edge and its parent
-		table.insert(edge.dest.edges, edge)
-		table.insert(edge.dest.parents, edge.src)
+			-- The destination node is told about this edge and its parent
+			table.insert(edge.dest.edges, edge)
+			table.insert(edge.dest.parents, edge.src)
 
-		-- We add this edge to our list of edges.
-		table.insert(self.edges, edge)
+			-- We add this edge to our list of edges.
+			table.insert(self.edges, edge)
 
-		-- Visualization
-		edge:createOSG()
-		self.osg.edgeroot:addChild(edge.osg)
-
-		print("Graph: Added DirectedEdge from", edge.srcname, "to", edge.destname)
+			-- Visualization
+			edge:createOSG()
+			self.osg.edgeroot:addChild(edge.osg)
+			print("Graph: Added DirectedEdge from", edge.srcname, "to", edge.destname)
+		else
+			print("Edge ",edge.srcname," to ",edge.destname," Already Exists")
+		end
 	end
 end
 

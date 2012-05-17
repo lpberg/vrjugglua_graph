@@ -3,7 +3,11 @@ require("getScriptFilename")
 require("TransparentGroup")
 vrjLua.appendToModelSearchPath(getScriptFilename())
 dofile(vrjLua.findInModelSearchPath([[..\graph\loadGraphFiles.lua]]))
-
+dofile(vrjLua.findInModelSearchPath([[MySounds/PlaySound.lua]]))
+local wavPath = vrjLua.findInModelSearchPath("tiny.wav")
+local myWavSound = SoundWav(wavPath)
+local wavPath2 = vrjLua.findInModelSearchPath("tiny1.wav")
+local myWavSound2 = SoundWav(wavPath2)
 g = Graph(
 	{
 		["one"] = GraphNode{position = {0,0,0},radius = .13};
@@ -27,12 +31,17 @@ Actions.addFrameAction(
 			for _,node in ipairs(g.nodes) do
 				local distance = (osg.Vec3d(unpack(node.position))-device_pos):length()
 				if math.abs(distance) < (node.radius*2) then
-					node:highlight(true)
+					if not node.isHighlighted then
+						node:highlight(true)
+						myWavSound2:trigger(1)
+					end
 					changed_this_time = true
 					hoveredNode = node
 					Actions.waitForRedraw()
 				else
-					node:highlight(false)
+					if node.isHighlighted then
+						node:highlight(false)
+					end
 					Actions.waitForRedraw()
 				end
 			end
@@ -69,6 +78,7 @@ Actions.addFrameAction(function()
 			g:addEdges{
 				DirectedEdge(pointOne.name, pointTwo.name,{color = {1,1,0,1},radius = pointOne.radius/3})
 			}
+			myWavSound:trigger(1)
 		end
 	end
 end)	
