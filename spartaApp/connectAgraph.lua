@@ -57,7 +57,7 @@ Actions.addFrameAction(
 )
 
 Actions.addFrameAction(function()
-	local drawBtn = gadget.DigitalInterface("VJButton1")
+	local drawBtn = gadget.DigitalInterface("WMButtonPlus")
 	local device = gadget.PositionInterface("VJWand")
 	while true do
 		repeat
@@ -74,7 +74,7 @@ end)
 
 Actions.addFrameAction(function()
 	local tempXFORM = Transform{}
-	local drawBtn = gadget.DigitalInterface("VJButton2")
+	local drawBtn = gadget.DigitalInterface("VJButton1")
 	local device = gadget.PositionInterface("VJWand")
 	while true do
 		local pointOne = nil
