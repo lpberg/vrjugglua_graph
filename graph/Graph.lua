@@ -135,13 +135,11 @@ function GraphPrototype:updateCurrentState(state_name)
 			--self.actionArgs.coulomb = true
 			self:performAction(parent.children)
 		end
-		if (#self.currentPath > 1 then
-			local parent = self:getNode(self.currentPath[#self.currentPath - 1])
-			parent:hideLabelOnChildrenEdges()
-		end
+		--if there is a parent, shut off label visualization
+
 		self:updateHighlightedPath()
 		self:updateColorOfChildren(state_name)
-		self:getNode(state_name):showLabelsOnChildrenEdges()
+		self:showLabelsOnChildrenEdges(state_name)
 	end
 end
 
@@ -199,8 +197,23 @@ function GraphPrototype:edgeExists(newedge)
 	end
 	return found
 end
-		
-	
+function GraphPrototype:showLabelsOnChildrenEdges(state_name)
+	for _,child in ipairs(self.nodes[state_name].children) do
+		local edge = self:getEdge(state_name,child.name)
+		edge:showLabel()
+	end
+end
+function GraphPrototype:hideLabelsOnChildrenEdges(state_name)
+	for _,child in ipairs(self.nodes[state_name].children) do
+		local edge = self:getEdge(state_name,child.name)
+		edge:hideLabel()
+	end
+end
+function GraphPrototype:hideAllEdgeLabels()
+	for _,edge in ipairs(self.edges) do
+		edge:hideLabel()
+	end
+end
 
 function GraphPrototype:addEdges(edges)
 	for _, edge in ipairs(edges) do
