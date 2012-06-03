@@ -122,7 +122,7 @@ function GraphPrototype:updateCurrentState(state_name)
 			table.insert(self.currentPath,state_name)
 		end
 		self:getNode(state_name):highlight(true)
-		self:updateHighlightedPath()
+		--self:updateHighlightedPath()
 		-- if new child created and a parent exists call FDG on its parent
 		if (#self.currentPath > 1 and childCreatedThisExecution) then
 			-- local nodesOfInterest = self:getNodeWithChildren(self.currentPath[#self.currentPath - 1
@@ -133,8 +133,13 @@ function GraphPrototype:updateCurrentState(state_name)
 			--self.actionArgs.coulomb = true
 			self:performAction(parent.children)
 		end
+		if (#self.currentPath > 1 then
+			local parent = self:getNode(self.currentPath[#self.currentPath - 1])
+			parent:hideLabelOnChildrenEdges()
+		end
 		self:updateHighlightedPath()
 		self:updateColorOfChildren(state_name)
+		self:getNode(state_name):showLabelsOnChildrenEdges()
 	end
 end
 
