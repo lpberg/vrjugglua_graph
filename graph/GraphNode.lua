@@ -72,8 +72,16 @@ function GraphNodeIndex:updateOSG()
 		edge:updateOSG()
 	end
 end
-
-
+function GraphNodeIndex:showLabelsOnChildrenEdges()
+	for _,edge in ipairs(self.edges) do
+		edge:showLabel()
+	end
+end
+function GraphNodeIndex:hideLabelsOnChildrenEdges()
+	for _,edge in ipairs(self.edges) do
+		edge:hideLabel()
+	end
+end
 GraphNode = function(node)
 	-- default value
 	
