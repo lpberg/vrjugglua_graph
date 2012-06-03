@@ -93,6 +93,7 @@ function GraphPrototype:updateColorOfChildren(name)
 end
 
 function GraphPrototype:updateCurrentState(state_name)
+	self:hideAllEdgeLabels()
 	local childCreatedThisExecution = false
 	--Does the node / state exist in the graph yet?, if not then create one
 	if (self:getNode(state_name) == nil) then
@@ -103,6 +104,7 @@ function GraphPrototype:updateCurrentState(state_name)
 	if(#self.currentPath == 0) then
 		table.insert(self.currentPath,state_name)
 		self:getNode(state_name):highlight(true)
+		self:showLabelsOnChildrenEdges(state_name)
 		self:printCurrentPath()
 	--if its not the first, find newest path, and update graphics
 	else
