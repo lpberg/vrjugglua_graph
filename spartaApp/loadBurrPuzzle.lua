@@ -1,7 +1,8 @@
 local initPosTable = {}
-params = defineSimulationParameters{
+--[[params = defineSimulationParameters{
 	maxStiffness = 300.0
 	}
+]]--
 function addBurrPuzzle(deltaX,deltaY,deltaZ)
 	pieceBlue =Transform{
 		scale = 5.0,
