@@ -79,3 +79,5 @@ g2 = Graph(
 
 RelativeTo.World:addChild(g2.osg.root)
 
+g2:updateCurrentState("012345")
+
