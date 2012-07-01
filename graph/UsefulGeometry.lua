@@ -18,7 +18,8 @@ TextLabel = function(here, there, val, size, zPlus, color)
 		position = {midpoint:x(), midpoint:y(), midpoint:z()+zPlus},
 		font = Font("DroidSans")
 	}
-	return texts
+	local centerTextDist = texts:computeBound():radius()
+	return Transform{position = {-centerTextDist,0,0}, texts}
 end
 
 
