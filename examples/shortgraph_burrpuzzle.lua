@@ -79,5 +79,9 @@ g2 = Graph(
 
 RelativeTo.World:addChild(g2.osg.root)
 
-g2:updateCurrentState("012345")
+--g2:updateCurrentState("012345")
+
+for _,edge in ipairs(g2.edges) do
+	edge:showLabel()
+end
 
