@@ -54,28 +54,6 @@ function GraphPrototype:updateHighlightedPath()
 	self:highlightPath(self:getPathAsEdgeTable(self.currentPath))
 end
 
-function GraphPrototype:createChildFromCurrentState(name)
-	print("Creating new node")
-	local childPos
-	if(#self.currentPath == 0) then
-		childPos = {0,0,0}
-	else
-		childPos = self:getNode(self.currentPath[#self.currentPath]).position
-	end
-	local myNodeRadius = self.nodes[1].radius or .01
-	if (#self:getNode(self.currentPath[#self.currentPath]).children > 0) then
-		local lastChild = #self:getNode(self.currentPath[#self.currentPath]).children
-		childPos = self:getNode(self.currentPath[#self.currentPath]).children[lastChild].position
-		self:addNodes({[name] = GraphNode{position = {childPos[1]+.125,childPos[2],childPos[3]},radius = myNodeRadius}})
-	else
-		local rand = math.random(1,50)
-		rand = rand/1000
-		print(rand)
-		self:addNodes({[name] = GraphNode{position = {childPos[1]+rand,childPos[2]-self.actionArgs.desiredEdgeLength,childPos[3]},radius = myNodeRadius}})
-	end
-	self:addEdges({DirectedEdge(self.currentPath[#self.currentPath], name,{radius = (myNodeRadius/(4*2))})})
-end
-
 function GraphPrototype:printCurrentPath()
 	for _,v in ipairs(self.currentPath) do
 		print(v)
@@ -92,14 +70,63 @@ function GraphPrototype:updateColorOfChildren(name)
 	end
 end
 
-function GraphPrototype:updateCurrentState(state_name)
-	self:hideAllEdgeLabels()
-	local childCreatedThisExecution = false
-	--Does the node / state exist in the graph yet?, if not then create one
-	if (self:getNode(state_name) == nil) then
-		self:createChildFromCurrentState(state_name)
-		childCreatedThisExecution = true
+function GraphPrototype:DFSLowTransparencyGraph(state_name)
+	root = self.nodes[state_name]
+	root:setLowTransparency()
+	for _,child in ipairs(root.children) do
+		edge = self:getEdge(state_name,child.name)
+		edge:setLowTransparency()
+		self:DFSLowTransparencyGraph(child.name)
 	end
+end
+function GraphPrototype:DFSHighTransparencyGraph(state_name)
+	root = self.nodes[state_name]
+	root:setHighTransparency()
+	for _,child in ipairs(root.children) do
+		edge = self:getEdge(state_name,child.name)
+		edge:setHighTransparency()
+		self:DFSHighTransparencyGraph(child.name)
+	end
+end
+function GraphPrototype:DFSNoTransparencyGraph(state_name)
+	root = self.nodes[state_name]
+	root:setNoTransparency()
+	for _,child in ipairs(root.children) do
+		edge = self:getEdge(state_name,child.name)
+		edge:setNoTransparency()
+		self:DFSNoTransparencyGraph(child.name)
+	end
+end	
+
+
+
+
+
+
+function GraphPrototype:updateTransparencyEffects(state_name)
+	-- make all barely visible 
+	for _,node in ipairs(self.nodes) do
+			node:setHighTransparency()
+	end
+	for _,edge in ipairs(self.edges) do
+			edge:setHighTransparency()
+	end
+	-- update sibling transparency to low
+	for _,parent in ipairs(self.nodes[state_name].parents) do
+		self:DFSLowTransparencyGraph(parent.name)
+	end
+	-- no transparency on state
+	self:DFSNoTransparencyGraph(state_name)
+	
+end
+
+function GraphPrototype:updateCurrentState(state_name)
+
+
+	self:hideAllEdgeLabels()
+	--Does the node / state exist in the graph yet
+	assert(self:getNode(state_name) ~= nil) 
+
 	--Is this the first state in the graph?, then add it and highlight node
 	if(#self.currentPath == 0) then
 		table.insert(self.currentPath,state_name)
@@ -124,22 +151,11 @@ function GraphPrototype:updateCurrentState(state_name)
 			table.insert(self.currentPath,state_name)
 		end
 		self:getNode(state_name):highlight(true)
-		--self:updateHighlightedPath()
-		-- if new child created and a parent exists call FDG on its parent
-		if (#self.currentPath > 1 and childCreatedThisExecution) then
-			-- local nodesOfInterest = self:getNodeWithChildren(self.currentPath[#self.currentPath - 1
-			local parent = self:getNode(self.currentPath[#self.currentPath - 1])
-			
-			--self.actionArgs.coulomb = false
-			self:performAction({parent})
-			--self.actionArgs.coulomb = true
-			self:performAction(parent.children)
-		end
-		--if there is a parent, shut off label visualization
 
 		self:updateHighlightedPath()
 		self:updateColorOfChildren(state_name)
 		self:showLabelsOnChildrenEdges(state_name)
+		self:updateTransparencyEffects(state_name)
 	end
 end
 
