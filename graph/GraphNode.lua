@@ -12,21 +12,21 @@ GraphNodeIndex.tostring_keys_to_skip = {
 	["tostring_keys_to_skip"] = true
 }
 
-function GNMT:__tostring()
-	local data = {}
-	for k, v in pairs(self) do
-		if self.tostring_keys_to_skip[k] == nil then
-			table.insert(data, table.concat{"[ [[", k, "]] ] = [[", tostring(v), "]]"})
-		end
-	end
-	return table.concat{
-		"[ [[",
-		self.name,
-		"]] ] = GraphNode{ ",
-		table.concat(data, ", "),
-		"}"
-		}
-end
+-- function GNMT:__tostring()
+	-- local data = {}
+	-- for k, v in pairs(self) do
+		-- if self.tostring_keys_to_skip[k] == nil then
+			-- table.insert(data, table.concat{"[ [[", k, "]] ] = [[", tostring(v), "]]"})
+		-- end
+	-- end
+	-- return table.concat{
+		-- "[ [[",
+		-- self.name,
+		-- "]] ] = GraphNode{ ",
+		-- table.concat(data, ", "),
+		-- "}"
+		-- }
+-- end
 
 function GraphNodeIndex:createOSG()
 	self.osgsphere = ColorSphere{
@@ -34,6 +34,19 @@ function GraphNodeIndex:createOSG()
 		position = {0, 0, 0},
 		color = self.color,
 	}
+	self.node_controll_switch = osg.Switch()
+	self.transparent_low = TransparentGroup{alpha=.25}
+	self.transparent_high = TransparentGroup{alpha=.75}
+	self.transparent_low:addChild(self.osgsphere)
+	self.transparent_high:addChild(self.osgsphere)
+	
+	
+	self.node_controll_switch:addChild(self.osgsphere)
+	self.node_controll_switch:addChild(self.transparent_low)
+	self.node_controll_switch:addChild(self.transparent_high)
+	
+	self.node_controll_switch:setSingleChildOn(0)
+	
 	
 	self.indicators = osg.Switch()
 	self.indicators:addChild(RedIndicatorSphere(self.radius*2))
@@ -41,9 +54,19 @@ function GraphNodeIndex:createOSG()
 	
 	self.osg = Transform{
 		position = self.position,
-		self.osgsphere,
+		self.node_controll_switch,
 		self.indicators,
 	}
+end
+
+function GraphNodeIndex:setLowTransparency()
+	self.node_controll_switch:setSingleChildOn(2)
+end
+function GraphNodeIndex:setHighTransparency()
+	self.node_controll_switch:setSingleChildOn(1)
+end
+function GraphNodeIndex:setNoTransparency()
+	self.node_controll_switch:setSingleChildOn(0)
 end
 
 function GraphNodeIndex:setColor(color)
