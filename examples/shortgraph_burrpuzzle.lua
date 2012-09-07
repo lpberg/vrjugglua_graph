@@ -7,22 +7,6 @@ function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
 runfile([[..\graph\loadGraphFiles.lua]])
 runfile([[..\graph\simpleLightsGraph.lua]])
 
-
--- A graph is G=(V, E)
-g = Graph(
-	{
-		["one"] = GraphNode{position = {1,1,0},radius = .1};
-		["two"] = GraphNode{position = {-.1,.5,0},radius = .1};
-		["three"] = GraphNode{position = {1,-1,1},radius = .1};
-		["four"] = GraphNode{position = {1,2,0},radius = .1};
-	},
-	{
-		DirectedEdge("one", "two",{labeltext="default1"});
-		DirectedEdge("two", "three",{labeltext="default2"});
-		DirectedEdge("three", "four",{labeltext="default3"});
-		DirectedEdge("four", "one",{labeltext="default4"});
-	}
-)
 local fact = .15
 local green = {(154/255),(205/255),(50/255),1}
 local yellow = {1,(215/255),0,1}
@@ -77,11 +61,18 @@ g2 = Graph(
 	}
 )
 
-RelativeTo.World:addChild(g2.osg.root)
+RelativeTo.World:addChild(Transform{position={0,1.25,0},g2.osg.root})
 
---g2:updateCurrentState("012345")
+g2:updateCurrentState("012345")
+g2:updateCurrentState("01234")
+g2:updateCurrentState("0123")
+g2:updateCurrentState("012")
 
-for _,edge in ipairs(g2.edges) do
-	edge:showLabel()
-end
+-- g2:updateCurrentState("01234")
+-- g2:updateCurrentState("0123")
+-- g2:updateCurrentState("012")
+
+-- for _,edge in ipairs(g2.edges) do
+	-- edge:showLabel()
+-- end
 
