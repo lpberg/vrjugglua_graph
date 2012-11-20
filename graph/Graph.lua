@@ -98,11 +98,6 @@ function GraphPrototype:DFSNoTransparencyGraph(state_name)
 	end
 end	
 
-
-
-
-
-
 function GraphPrototype:updateTransparencyEffects(state_name)
 	-- make all barely visible 
 	for _,node in ipairs(self.nodes) do
@@ -117,25 +112,28 @@ function GraphPrototype:updateTransparencyEffects(state_name)
 	end
 	-- no transparency on state
 	self:DFSNoTransparencyGraph(state_name)
-	
 end
 
 function GraphPrototype:updateCurrentState(state_name)
-
-
 	self:hideAllEdgeLabels()
 	--Does the node / state exist in the graph yet
 	assert(self:getNode(state_name) ~= nil) 
 
-	--Is this the first state in the graph?, then add it and highlight node
+	--Is this the first state in the graph?
 	if(#self.currentPath == 0) then
+		--add to current path table
 		table.insert(self.currentPath,state_name)
+		--highlight the new "current node"
 		self:getNode(state_name):highlight(true)
-		self:showLabelsOnChildrenEdges(state_name)
-		self:printCurrentPath()
-	--if its not the first, find newest path, and update graphics
+		--enable: show labels on child edges
+		--self:showLabelsOnChildrenEdges(state_name)
+
+	--Else, if current path has stuff in it 
 	else
+		--disable all node highlighting
 		self:disableNodeHighlighting()
+		
+		--iterate through current path table to see if we went backwards 'up' the graph to a previous state
 		local currentStateFound = false
 		for idx,stateName in ipairs(self.currentPath) do
 			if(currentStateFound == false) then
@@ -146,16 +144,20 @@ function GraphPrototype:updateCurrentState(state_name)
 				self.currentPath[idx] = nil
 			end
 		end
-		--wasn't in the path, add it
+		--if newstate wasn't in the path, add it to the end
 		if(currentStateFound == false) then
 			table.insert(self.currentPath,state_name)
 		end
+		--turn on highlighting for current node
 		self:getNode(state_name):highlight(true)
-
+		--update the visualization for the highlighted path
 		self:updateHighlightedPath()
+		--updated the color of the children nodes according to 'dest'
 		self:updateColorOfChildren(state_name)
-		self:showLabelsOnChildrenEdges(state_name)
-		self:updateTransparencyEffects(state_name)
+		--show the labels for the current nodes children only
+		--self:showLabelsOnChildrenEdges(state_name)
+		--update transparency - not in use right now
+		-- self:updateTransparencyEffects(state_name)
 	end
 end
 
@@ -172,7 +174,7 @@ function GraphPrototype:getEdge(srcname,destname)
 		self:addEdges({DirectedEdge(srcname, destname,{radius = (myNodeRadius/(8))})})
 		return self:getEdge(srcname,desname) 
 	else
-		print("could not create edge as one or both of node names are not currently nodes...:(")
+		print("could not create edge as one or both of node names are not currently nodes")
 	end
 	
 end
@@ -195,13 +197,6 @@ function GraphPrototype:getNodeWithChildren(nodename)
 		table.insert(nodes,child)
 	end
 	return nodes
-end
-
-function GraphPrototype:performAction(nodes)
-	local function addFrameActionNow()
-		self:ForceDirectedGraph(self.actionArgs,nodes)
-	end
-	Actions.addFrameAction(addFrameActionNow)
 end
 
 function GraphPrototype:edgeExists(newedge)
