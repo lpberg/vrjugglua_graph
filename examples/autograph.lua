@@ -6,6 +6,7 @@ function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
 
 runfile([[..\graph\loadGraphFiles.lua]])
 runfile([[..\graph\simpleLightsGraph.lua]])
+runfile([[..\extras\FDG_Layout.lua]])
 
 
 -- A graph is G=(V, E)
@@ -18,9 +19,6 @@ g = Graph(
 	}
 )
 
-
-
-g.actionArgs = {small_num = .55,damping = .80, c_mult = 2}
 local function randColor()
 	local r = osgLua.GLfloat(math.random(-100,100)/100)
 	local b = osgLua.GLfloat(math.random(-100,100)/100)
@@ -61,25 +59,20 @@ for i=1,10 do
 end
 
 -- Add some random edges
-for i=1,10 do
+for i=1,25 do
 	addRandomEdge(g)
 end
 
 RelativeTo.World:addChild(g.osg.root)
 
---[[Display the edges (in a particular way - notice how this could be useful?)
-for _, e in ipairs(g.edges) do
-	print(e) -- uses the __tostring metamethod
-end
+args={}
+args.c_mult = 100
+args.h_mult = 100
+args.desiredEdgeLength = 2
+args.small_num = .20
+args.damping =  .05
 
--- Display some info about the nodes.
-for i, node in ipairs(g.nodes) do
-	print( ("Node named '%s' (internal ID %d), has %d parents and %d children"):format(node.name, i, #(node.parents), #(node.children)) )
-end
+Actions.addFrameAction(function()
+		ForceDirectedGraph({},g.nodes)
+end)
 
--- Display the nodes kind of like how we did the edges - not complete, of course, but the idea is there.
-for _, node in ipairs(g.nodes) do
-	print(node) -- uses the __tostring metamethod
-end
-
-]]--
