@@ -4,8 +4,17 @@ require("getScriptFilename")
 vrjLua.appendToModelSearchPath(getScriptFilename())
 function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
 
+factory = Transform{
+	position = {0,-1,10},
+	orientation = AngleAxis(Degrees(-90), Axis{1.0, 0.0, 0.0}),
+	scale = ScaleFrom.inches,
+	Model("basicfactory.ive")
+}
+RelativeTo.World:addChild(factory)
+
 runfile([[..\graph\loadGraphFiles.lua]])
 runfile([[..\graph\simpleLightsGraph.lua]])
+runfile([[simpleLights.lua]])
 
 local fact = .15
 local green = {(154/255),(205/255),(50/255),1}
@@ -14,7 +23,8 @@ local red = {1,0,0,1}
 local teal = {0,(206/255),(209/255),1}
 local purple = {(138/255),(43/255),(210/255),1}
 local blue = {0,0,1,1}
-g2 = Graph(
+
+g = Graph(
 	{
 		--x = 0
 		["012345"] = GraphNode{position = {0,0,0},radius = .03};
@@ -61,12 +71,12 @@ g2 = Graph(
 	}
 )
 
-RelativeTo.World:addChild(Transform{position={0,1.25,0},g2.osg.root})
+RelativeTo.World:addChild(Transform{position={2,1.5,0},g.osg.root})
 
-g2:updateCurrentState("012345")
-g2:updateCurrentState("01234")
-g2:updateCurrentState("0123")
-g2:updateCurrentState("012")
+g:updateCurrentState("012345")
+g:updateCurrentState("01234")
+g:updateCurrentState("0123")
+g:updateCurrentState("012")
 
 -- g2:updateCurrentState("01234")
 -- g2:updateCurrentState("0123")
