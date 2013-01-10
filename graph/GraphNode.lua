@@ -37,20 +37,25 @@ function GraphNodeIndex:createOSG()
 	self.node_controll_switch = osg.Switch()
 	self.transparent_low = TransparentGroup{alpha=.25}
 	self.transparent_high = TransparentGroup{alpha=.75}
+	self.transparent_custom = TransparentGroup{alpha=self.transparent_custom or .25}
 	self.transparent_low:addChild(self.osgsphere)
 	self.transparent_high:addChild(self.osgsphere)
+	self.transparent_custom:addChild(self.osgsphere)
 	
 	
 	self.node_controll_switch:addChild(self.osgsphere)
 	self.node_controll_switch:addChild(self.transparent_low)
 	self.node_controll_switch:addChild(self.transparent_high)
+	self.node_controll_switch:addChild(self.transparent_custom)
 	
 	self.node_controll_switch:setSingleChildOn(0)
 	
 	
 	self.indicators = osg.Switch()
-	self.indicators:addChild(RedIndicatorSphere(self.radius*2))
+	self.indicators:addChild(RedIndicatorSphere(self.radius*1.5))
+	self.indicators:addChild(GreenIndicatorSphere(self.radius*2))
 	self.indicators:setValue(0,false)
+	self.indicators:setValue(1,false)
 	
 	self.osg = Transform{
 		position = self.position,
