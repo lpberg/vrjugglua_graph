@@ -67,3 +67,11 @@ RedIndicatorSphere = function(myRadius)
 	return xform
 end
 
+GreenIndicatorSphere = function(myRadius) 
+	local xform = Transform{
+			position = {0,0,0},
+			TransparentGroup{ColorSphere{radius = myRadius, color = {0,1,0,1}},alpha=.15},
+		}
+	return xform
+end
+
