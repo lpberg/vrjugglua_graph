@@ -80,7 +80,15 @@ RelativeTo.World:addChild(Transform{position={2,1.5,0},g.osg.root})
 
 
 
--- for _,edge in ipairs(g2.edges) do
-	-- edge:showLabel()
--- end
+-- g.nodes["012345"]:highlight(true,1)
+-- g.nodes["01234"]:highlight(true,1)
+-- g.nodes["0123"]:highlight(true,1)
+-- g.nodes["13"]:highlight(true,1)
+-- g.nodes["3"]:highlight(true,1)
 
+-- g.nodes["012345"]:setLowTransparency()
+-- g.nodes["01234"]:setHighTransparency()
+g.nodes["0123"]:setHighTransparency()
+g.nodes["123"]:setHighTransparency()
+g.nodes["13"]:setHighTransparency()
+g.nodes["3"]:setHighTransparency()
