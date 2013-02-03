@@ -20,6 +20,29 @@ function GraphPrototype:addNodes(nodes)
 	end
 end
 
+function GraphPrototype:getNodesAndEdgesFromPath(args)
+	print("calling getNodesAndEdgesFromPath...")
+	local items = {}
+	for x,n in ipairs(args) do
+		table.insert(items,self.nodes[n])
+	end
+	for k,v in ipairs(args) do
+		if args[k+1] ~= nil then
+			local e = self:getEdge(args[k],args[k+1])
+			table.insert(items,e)
+		end
+	end
+	return items
+end
+
+function GraphPrototype:setTransparencyForPath(args)
+	print("calling setTransparencyForPath...")
+	items = self:getNodesAndEdgesFromPath(args)
+	for z,b in ipairs(items) do
+		b:setHighTransparency()
+	end
+end
+
 function GraphPrototype:getPathAsEdgeTable(args)
 	local edgeTable= {}
 	for k,v in ipairs(args) do
@@ -70,49 +93,49 @@ function GraphPrototype:updateColorOfChildren(name)
 	end
 end
 
-function GraphPrototype:DFSLowTransparencyGraph(state_name)
-	root = self.nodes[state_name]
-	root:setLowTransparency()
-	for _,child in ipairs(root.children) do
-		edge = self:getEdge(state_name,child.name)
-		edge:setLowTransparency()
-		self:DFSLowTransparencyGraph(child.name)
-	end
-end
-function GraphPrototype:DFSHighTransparencyGraph(state_name)
-	root = self.nodes[state_name]
-	root:setHighTransparency()
-	for _,child in ipairs(root.children) do
-		edge = self:getEdge(state_name,child.name)
-		edge:setHighTransparency()
-		self:DFSHighTransparencyGraph(child.name)
-	end
-end
-function GraphPrototype:DFSNoTransparencyGraph(state_name)
-	root = self.nodes[state_name]
-	root:setNoTransparency()
-	for _,child in ipairs(root.children) do
-		edge = self:getEdge(state_name,child.name)
-		edge:setNoTransparency()
-		self:DFSNoTransparencyGraph(child.name)
-	end
-end	
+-- function GraphPrototype:DFSLowTransparencyGraph(state_name)
+	-- root = self.nodes[state_name]
+	-- root:setLowTransparency()
+	-- for _,child in ipairs(root.children) do
+		-- edge = self:getEdge(state_name,child.name)
+		-- edge:setLowTransparency()
+		-- self:DFSLowTransparencyGraph(child.name)
+	-- end
+-- end
+-- function GraphPrototype:DFSHighTransparencyGraph(state_name)
+	-- root = self.nodes[state_name]
+	-- root:setHighTransparency()
+	-- for _,child in ipairs(root.children) do
+		-- edge = self:getEdge(state_name,child.name)
+		-- edge:setHighTransparency()
+		-- self:DFSHighTransparencyGraph(child.name)
+	-- end
+-- end
+-- function GraphPrototype:DFSNoTransparencyGraph(state_name)
+	-- root = self.nodes[state_name]
+	-- root:setNoTransparency()
+	-- for _,child in ipairs(root.children) do
+		-- edge = self:getEdge(state_name,child.name)
+		-- edge:setNoTransparency()
+		-- self:DFSNoTransparencyGraph(child.name)
+	-- end
+-- end	
 
-function GraphPrototype:updateTransparencyEffects(state_name)
+-- function GraphPrototype:updateTransparencyEffects(state_name)
 	-- make all barely visible 
-	for _,node in ipairs(self.nodes) do
-			node:setHighTransparency()
-	end
-	for _,edge in ipairs(self.edges) do
-			edge:setHighTransparency()
-	end
+	-- for _,node in ipairs(self.nodes) do
+			-- node:setHighTransparency()
+	-- end
+	-- for _,edge in ipairs(self.edges) do
+			-- edge:setHighTransparency()
+	-- end
 	-- update sibling transparency to low
-	for _,parent in ipairs(self.nodes[state_name].parents) do
-		self:DFSLowTransparencyGraph(parent.name)
-	end
+	-- for _,parent in ipairs(self.nodes[state_name].parents) do
+		-- self:DFSLowTransparencyGraph(parent.name)
+	-- end
 	-- no transparency on state
-	self:DFSNoTransparencyGraph(state_name)
-end
+	-- self:DFSNoTransparencyGraph(state_name)
+-- end
 
 function GraphPrototype:updateCurrentState(state_name)
 	self:hideAllEdgeLabels()

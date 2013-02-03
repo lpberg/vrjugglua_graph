@@ -39,13 +39,16 @@ function DirectedEdgeIndex:createOSG()
 	--create transparent groups
 	self.transparent_low = TransparentGroup{alpha=.25}
 	self.transparent_high = TransparentGroup{alpha=.75}
+	self.transparent_custom = TransparentGroup{alpha=self.transparent_custom or .25}
 	--add osg_elements to tranparent groups
 	self.transparent_low:addChild(self.osg_elements)
 	self.transparent_high:addChild(self.osg_elements)
+	self.transparent_custom:addChild(self.osg_elements)
 	--add children to edge control switch
 	self.edge_control_switch:addChild(self.osg_elements)
 	self.edge_control_switch:addChild(self.transparent_low)
 	self.edge_control_switch:addChild(self.transparent_high)
+	self.edge_control_switch:addChild(self.transparent_custom)
 	
 	--create switch for indicator
 	self.indicators = osg.Switch()
