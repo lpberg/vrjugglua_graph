@@ -88,7 +88,9 @@ RelativeTo.World:addChild(Transform{position={2,1.5,0},g.osg.root})
 
 -- g.nodes["012345"]:setLowTransparency()
 -- g.nodes["01234"]:setHighTransparency()
-g.nodes["0123"]:setHighTransparency()
-g.nodes["123"]:setHighTransparency()
-g.nodes["13"]:setHighTransparency()
-g.nodes["3"]:setHighTransparency()
+-- g.nodes["0123"]:setHighTransparency()
+-- g.nodes["123"]:setHighTransparency()
+-- g.nodes["13"]:setHighTransparency()
+-- g.nodes["3"]:setHighTransparency()
+args = {"0123","123","13","3"}
+g:setTransparencyForPath(args)
