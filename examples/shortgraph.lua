@@ -20,11 +20,18 @@ g = Graph(
 	{
 		DirectedEdge("one", "two",{labeltext=""});
 		DirectedEdge("one", "three",{labeltext=""});
-		-- DirectedEdge("three", "four",{labeltext=""});
+		DirectedEdge("three", "four",{labeltext=""});
 		DirectedEdge("three", "five",{labeltext=""});
 		DirectedEdge("two", "four",{labeltext=""});
 	}
 )
 
 RelativeTo.World:addChild(g.osg.root)
-g:updateCurrentState("one")
+-- g:updateCurrentState("one")
+
+-- local filename = string.match(getScriptFilename(), "(.-)([^\\]-([^%.]+))$").."shortGraph"..".dot"
+-- local img_filename = string.match(getScriptFilename(), "(.-)([^\\]-([^%.]+))$").."shortGraph"..".png"
+-- g:writeOutDotFile(filename)
+-- print(img_filename)
+-- os.execute([["C:\Program Files (x86)\Graphviz2.30\bin\dot.exe"]]..[[ -Tpng ]]..filename..[[ -o ]]..img_filename)
+-- print([["C:\Program Files (x86)\Graphviz2.30\bin\dot.exe" ]]..filename..[[ -o ]]..filename..[[im]])

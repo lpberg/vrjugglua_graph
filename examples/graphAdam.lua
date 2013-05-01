@@ -155,4 +155,12 @@ g = Graph(
 )
 g.actionArgs = {small_num = .55,damping = .80, c_mult = 100, h_mult = 10, hooks=false}
 RelativeTo.World:addChild(g.osg.root)
-g:performAction()
+-- g:performAction()
+
+
+local filename = string.match(getScriptFilename(), "(.-)([^\\]-([^%.]+))$").."adamGraph"..".dot"
+local img_filename = string.match(getScriptFilename(), "(.-)([^\\]-([^%.]+))$").."adamGraph"..".png"
+g:writeOutDotFile(filename)
+-- print(img_filename)
+os.execute([["C:\Program Files (x86)\Graphviz2.30\bin\dot.exe"]]..[[ -Tpng ]]..filename..[[ -o ]]..img_filename)
+os.execute([["C:\Program Files (x86)\Graphviz2.30\bin\dot.exe" ]]..filename..[[ -o ]]..filename..[[im]])

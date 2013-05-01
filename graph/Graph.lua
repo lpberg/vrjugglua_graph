@@ -249,10 +249,49 @@ function GraphPrototype:hideAllEdgeLabels()
 	end
 end
 
+function Hex2RGB(sHexString)
+	if String.Length(sHexString) ~= 6 then
+		return 0,0,0
+	else
+		red = String.Left(sHexString,2)
+		green = String.Mid(sHexString,3,2)
+		blue = String.Right(sHexString,2)
+		red = tonumber(red, 16).."";
+		green = tonumber(green, 16).."";
+		blue = tonumber(blue, 16).."";
+		return red, green, blue
+	end
+end
+
+function GraphPrototype:writeOutDotFile(filename)
+	local outfile = io.open(filename, "w")
+	local outstr = "digraph G {\n"
+	--write out nodes
+	for _, node in ipairs(self.nodes) do 
+		--adding node name lable
+		outstr = outstr..'\t'..node.name.." ["..'label="'..node.name..'",'
+		--TODO: not sure how to conver color systems...?
+		-- outstr = outstr..'fillcolor="'..node.label..'",'
+		outstr = outstr..'width="'..(node.radius*2)..'",'
+		outstr = outstr..'height="'..(node.radius*2)..'",'
+		--adding final newline
+		outstr = outstr.."];\n"
+	end
+	--write out connections
+	for _, edge in ipairs(self.edges) do 
+		outstr = outstr..'\t'..edge.src.name.." -> "..edge.dest.name..";\n"
+	end
+	outstr = outstr.."}"
+	outfile:write(outstr)
+	outfile:close()
+	print(filename.." created")
+end
+
 function GraphPrototype:addEdges(edges)
 	for _, edge in ipairs(edges) do
 		if not self:edgeExists(edge) then
 			-- Look up the source and destination graphnode by name.
+			print("Trying to add edge: "..edge.srcname.." "..#edge.srcname)
 			assert(self.nodes[edge.srcname], "Source name of edge unknown!")
 			edge.src = self.nodes[edge.srcname]
 
