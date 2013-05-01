@@ -12,21 +12,6 @@ GraphNodeIndex.tostring_keys_to_skip = {
 	["tostring_keys_to_skip"] = true
 }
 
--- function GNMT:__tostring()
-	-- local data = {}
-	-- for k, v in pairs(self) do
-		-- if self.tostring_keys_to_skip[k] == nil then
-			-- table.insert(data, table.concat{"[ [[", k, "]] ] = [[", tostring(v), "]]"})
-		-- end
-	-- end
-	-- return table.concat{
-		-- "[ [[",
-		-- self.name,
-		-- "]] ] = GraphNode{ ",
-		-- table.concat(data, ", "),
-		-- "}"
-		-- }
--- end
 
 function GraphNodeIndex:createOSG()
 	self.osgsphere = ColorSphere{
@@ -102,10 +87,11 @@ function GraphNodeIndex:updateOSG()
 end
 
 GraphNode = function(node)
-	-- default value
-	
+	node.label = node.label or node.labeltext or "default_label" --not implemented
+	node.fontcolor = node.fontcolor or {1,1,1,1} --not implemented
 	node.radius = node.radius or 0.125
 	node.color = node.color or {1,1,1,1}
+	node.fillcolor = node.color 
 	setmetatable(node, GNMT)
 	node:createOSG()
 	node.parents = {}

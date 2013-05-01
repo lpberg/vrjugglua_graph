@@ -25,7 +25,7 @@ function DirectedEdgeIndex:createOSG()
 	
 	--create "label" object
 	self.labelSwitch = osg.Switch()
-	self.labelSwitch:addChild(TextLabel(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)), self.labeltext, self.labelSize, self.radius, self.labelColor))
+	self.labelSwitch:addChild(TextLabel(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)), self.label, self.fontsize, self.radius, self.fontcolor))
 	--hiding label by default
 	self.labelSwitch:setAllChildrenOff()
 	--normal edge osg
@@ -82,7 +82,7 @@ function DirectedEdgeIndex:updateOSG()
 	self.srcpos = self.src.position
 	self.destpos = self.dest.position
 	-- update label graphic
-	self.osg_elements.Child[2].Child[1] = TextLabel(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.labeltext,self.labelSize,self.radius,self.labelColor)
+	self.osg_elements.Child[2].Child[1] = TextLabel(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.label,self.fontsize,self.radius,self.fontcolor)
 	--update normal edge graphic
 	self.osg_elements.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius,self.color)
 	--update highlighted edge graphic
@@ -123,29 +123,30 @@ DirectedEdge = function(source, destination,args)
 	-- so this is a commonly-seen pattern
 	local _radius = 0.007
 	local _color = {(105/255),(105/255),(105/255),1} --gray color default
-	local _labelColor = {1,1,1,1}
+	local _fontcolor = {1,1,1,1}
 	local _highlightColor = {1,1,0,1}
 	local _label = ""
-	local _labelSize = .25
+	local _fontsize = .25
 	local _destColor = nil
 
 	if args ~= nil then
 		_radius = args.radius or _radius
 		_color = args.color or _color
-		_labelColor = args.labelColor or _labelColor
-		_labelSize = args.labelSize or _labelSize
-		_label = args.labeltext or _label
+		_fontcolor = args.fontcolor or _fontcolor
+		_fontsize = args.fontsize or _fontsize
+		_label = args.label or _label
 		_destColor = args.destColor or _destColor
 		_highlightColor = args.highlightColor or _highlightColor
 	end
+	
 	return setmetatable({srcname = source, 
 						 destname = destination, 
 						 radius = _radius, 
 						 color = _color, 
 						 destColor = _destColor, 
-						 labelColor = _labelColor, 
-						 labelSize = _labelSize, 
-						 labeltext = _label, 
+						 fontcolor = _fontcolor, 
+						 fontsize = _fontsize, 
+						 label = _label, 
 						 highlightColor = _highlightColor
 						 }, DEMT)
 end
