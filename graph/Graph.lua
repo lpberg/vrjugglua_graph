@@ -16,38 +16,38 @@ function GraphPrototype:addNodes(nodes)
 		node.name = nodename
 		-- Add the node to the scenegraph
 		self.osg.noderoot:addChild(node.osg)
-		print("Graph: Added GraphNode:", node.name)
+		-- print("Graph: Added GraphNode:", node.name)
 	end
 end
 
 function GraphPrototype:getNodesAndEdgesFromPath(args)
-	print("calling getNodesAndEdgesFromPath...")
+	-- print("calling getNodesAndEdgesFromPath...")
 	local items = {}
-	for x,n in ipairs(args) do
-		table.insert(items,self.nodes[n])
+	for x, n in ipairs(args) do
+		table.insert(items, self.nodes[n])
 	end
-	for k,v in ipairs(args) do
-		if args[k+1] ~= nil then
-			local e = self:getEdge(args[k],args[k+1])
-			table.insert(items,e)
+	for k, v in ipairs(args) do
+		if args[k + 1] ~= nil then
+			local e = self:getEdge(args[k], args[k + 1])
+			table.insert(items, e)
 		end
 	end
 	return items
 end
 
 function GraphPrototype:setTransparencyForPath(args)
-	print("calling setTransparencyForPath...")
+	-- print("calling setTransparencyForPath...")
 	items = self:getNodesAndEdgesFromPath(args)
-	for z,b in ipairs(items) do
+	for z, b in ipairs(items) do
 		b:setHighTransparency()
 	end
 end
 
 function GraphPrototype:getPathAsEdgeTable(args)
-	local edgeTable= {}
-	for k,v in ipairs(args) do
-		if args[k+1] ~= nil then
-			local e = self:getEdge(args[k],args[k+1])
+	local edgeTable = {}
+	for k, v in ipairs(args) do
+		if args[k + 1] ~= nil then
+			local e = self:getEdge(args[k], args[k + 1])
 			edgeTable[k] = e
 		end
 	end
@@ -78,15 +78,15 @@ function GraphPrototype:updateHighlightedPath()
 end
 
 function GraphPrototype:printCurrentPath()
-	for _,v in ipairs(self.currentPath) do
+	for _, v in ipairs(self.currentPath) do
 		print(v)
 	end
 end
 
 function GraphPrototype:updateColorOfChildren(name)
 	local node = self.nodes[name]
-	for _,child in ipairs(node.children) do
-		local edgeOfInterest = self:getEdge(name,child.name) 
+	for _, child in ipairs(node.children) do
+		local edgeOfInterest = self:getEdge(name, child.name)
 		if (edgeOfInterest.destColor ~= nil) then
 			child:setColor(edgeOfInterest.destColor)
 		end
@@ -94,71 +94,71 @@ function GraphPrototype:updateColorOfChildren(name)
 end
 
 -- function GraphPrototype:DFSLowTransparencyGraph(state_name)
-	-- root = self.nodes[state_name]
-	-- root:setLowTransparency()
-	-- for _,child in ipairs(root.children) do
-		-- edge = self:getEdge(state_name,child.name)
-		-- edge:setLowTransparency()
-		-- self:DFSLowTransparencyGraph(child.name)
-	-- end
+-- root = self.nodes[state_name]
+-- root:setLowTransparency()
+-- for _,child in ipairs(root.children) do
+-- edge = self:getEdge(state_name,child.name)
+-- edge:setLowTransparency()
+-- self:DFSLowTransparencyGraph(child.name)
+-- end
 -- end
 -- function GraphPrototype:DFSHighTransparencyGraph(state_name)
-	-- root = self.nodes[state_name]
-	-- root:setHighTransparency()
-	-- for _,child in ipairs(root.children) do
-		-- edge = self:getEdge(state_name,child.name)
-		-- edge:setHighTransparency()
-		-- self:DFSHighTransparencyGraph(child.name)
-	-- end
+-- root = self.nodes[state_name]
+-- root:setHighTransparency()
+-- for _,child in ipairs(root.children) do
+-- edge = self:getEdge(state_name,child.name)
+-- edge:setHighTransparency()
+-- self:DFSHighTransparencyGraph(child.name)
+-- end
 -- end
 -- function GraphPrototype:DFSNoTransparencyGraph(state_name)
-	-- root = self.nodes[state_name]
-	-- root:setNoTransparency()
-	-- for _,child in ipairs(root.children) do
-		-- edge = self:getEdge(state_name,child.name)
-		-- edge:setNoTransparency()
-		-- self:DFSNoTransparencyGraph(child.name)
-	-- end
+-- root = self.nodes[state_name]
+-- root:setNoTransparency()
+-- for _,child in ipairs(root.children) do
+-- edge = self:getEdge(state_name,child.name)
+-- edge:setNoTransparency()
+-- self:DFSNoTransparencyGraph(child.name)
+-- end
 -- end	
 
 -- function GraphPrototype:updateTransparencyEffects(state_name)
-	-- make all barely visible 
-	-- for _,node in ipairs(self.nodes) do
-			-- node:setHighTransparency()
-	-- end
-	-- for _,edge in ipairs(self.edges) do
-			-- edge:setHighTransparency()
-	-- end
-	-- update sibling transparency to low
-	-- for _,parent in ipairs(self.nodes[state_name].parents) do
-		-- self:DFSLowTransparencyGraph(parent.name)
-	-- end
-	-- no transparency on state
-	-- self:DFSNoTransparencyGraph(state_name)
+-- make all barely visible 
+-- for _,node in ipairs(self.nodes) do
+-- node:setHighTransparency()
+-- end
+-- for _,edge in ipairs(self.edges) do
+-- edge:setHighTransparency()
+-- end
+-- update sibling transparency to low
+-- for _,parent in ipairs(self.nodes[state_name].parents) do
+-- self:DFSLowTransparencyGraph(parent.name)
+-- end
+-- no transparency on state
+-- self:DFSNoTransparencyGraph(state_name)
 -- end
 
 function GraphPrototype:updateCurrentState(state_name)
 	self:hideAllEdgeLabels()
 	--Does the node / state exist in the graph yet
-	assert(self:getNode(state_name) ~= nil) 
+	assert(self:getNode(state_name) ~= nil)
 
 	--Is this the first state in the graph?
 	if(#self.currentPath == 0) then
 		--add to current path table
-		table.insert(self.currentPath,state_name)
+		table.insert(self.currentPath, state_name)
 		--highlight the new "current node"
 		self:getNode(state_name):highlight(true)
 		--enable: show labels on child edges
 		--self:showLabelsOnChildrenEdges(state_name)
 
-	--Else, if current path has stuff in it 
+		--Else, if current path has stuff in it 
 	else
 		--disable all node highlighting
 		self:disableNodeHighlighting()
-		
+
 		--iterate through current path table to see if we went backwards 'up' the graph to a previous state
 		local currentStateFound = false
-		for idx,stateName in ipairs(self.currentPath) do
+		for idx, stateName in ipairs(self.currentPath) do
 			if(currentStateFound == false) then
 				if(stateName == state_name) then
 					currentStateFound = true
@@ -169,7 +169,7 @@ function GraphPrototype:updateCurrentState(state_name)
 		end
 		--if newstate wasn't in the path, add it to the end
 		if(currentStateFound == false) then
-			table.insert(self.currentPath,state_name)
+			table.insert(self.currentPath, state_name)
 		end
 		--turn on highlighting for current node
 		self:getNode(state_name):highlight(true)
@@ -184,22 +184,22 @@ function GraphPrototype:updateCurrentState(state_name)
 	end
 end
 
-function GraphPrototype:getEdge(srcname,destname)
+function GraphPrototype:getEdge(srcname, destname)
 	for _, edge in ipairs(self.edges) do
 		if edge.srcname == srcname and edge.destname == destname then
 			return edge
 		end
 	end
-	
+
 	if (self.nodes[srcname] ~= nil and self.nodes[destname] ~= nil) then
 		print("edge not found in graph...creating one..")
 		local myNodeRadius = self.nodes[1].radius or .01
-		self:addEdges({DirectedEdge(srcname, destname,{radius = (myNodeRadius/(8))})})
-		return self:getEdge(srcname,desname) 
+		self:addEdges({DirectedEdge(srcname, destname, {radius = (myNodeRadius / (8))})})
+		return self:getEdge(srcname, desname)
 	else
 		print("could not create edge as one or both of node names are not currently nodes")
 	end
-	
+
 end
 
 function GraphPrototype:getNode(nodename)
@@ -215,16 +215,16 @@ end
 function GraphPrototype:getNodeWithChildren(nodename)
 	local nodes = {}
 	local parent = self:getNode(nodename)
-	table.insert(nodes,parent)
-	for _,child in ipairs(parent.children) do
-		table.insert(nodes,child)
+	table.insert(nodes, parent)
+	for _, child in ipairs(parent.children) do
+		table.insert(nodes, child)
 	end
 	return nodes
 end
 
 function GraphPrototype:edgeExists(newedge)
 	local found = false
-	for _, edge in ipairs(self.edges) do 
+	for _, edge in ipairs(self.edges) do
 		if edge.srcname == newedge.srcname and edge.destname == newedge.destname then
 			found = true
 		end
@@ -232,33 +232,33 @@ function GraphPrototype:edgeExists(newedge)
 	return found
 end
 function GraphPrototype:showLabelsOnChildrenEdges(state_name)
-	for _,child in ipairs(self.nodes[state_name].children) do
-		local edge = self:getEdge(state_name,child.name)
+	for _, child in ipairs(self.nodes[state_name].children) do
+		local edge = self:getEdge(state_name, child.name)
 		edge:showLabel()
 	end
 end
 function GraphPrototype:hideLabelsOnChildrenEdges(state_name)
-	for _,child in ipairs(self.nodes[state_name].children) do
-		local edge = self:getEdge(state_name,child.name)
+	for _, child in ipairs(self.nodes[state_name].children) do
+		local edge = self:getEdge(state_name, child.name)
 		edge:hideLabel()
 	end
 end
 function GraphPrototype:hideAllEdgeLabels()
-	for _,edge in ipairs(self.edges) do
+	for _, edge in ipairs(self.edges) do
 		edge:hideLabel()
 	end
 end
 
 function Hex2RGB(sHexString)
 	if String.Length(sHexString) ~= 6 then
-		return 0,0,0
+		return 0, 0, 0
 	else
-		red = String.Left(sHexString,2)
-		green = String.Mid(sHexString,3,2)
-		blue = String.Right(sHexString,2)
-		red = tonumber(red, 16).."";
-		green = tonumber(green, 16).."";
-		blue = tonumber(blue, 16).."";
+		red = String.Left(sHexString, 2)
+		green = String.Mid(sHexString, 3, 2)
+		blue = String.Right(sHexString, 2)
+		red = tonumber(red, 16) .. "";
+		green = tonumber(green, 16) .. "";
+		blue = tonumber(blue, 16) .. "";
 		return red, green, blue
 	end
 end
@@ -267,31 +267,31 @@ function GraphPrototype:writeOutDotFile(filename)
 	local outfile = io.open(filename, "w")
 	local outstr = "digraph G {\n"
 	--write out nodes
-	for _, node in ipairs(self.nodes) do 
+	for _, node in ipairs(self.nodes) do
 		--adding node name lable
-		outstr = outstr..'\t'..node.name.." ["..'label="'..node.name..'",'
+		outstr = outstr .. '\t' .. node.name .. " [" .. 'label="' .. node.name .. '",'
 		--TODO: not sure how to conver color systems...?
 		-- outstr = outstr..'fillcolor="'..node.label..'",'
-		outstr = outstr..'width="'..(node.radius*2)..'",'
-		outstr = outstr..'height="'..(node.radius*2)..'",'
+		outstr = outstr .. 'width="' .. (node.radius * 2) .. '",'
+		outstr = outstr .. 'height="' .. (node.radius * 2) .. '",'
 		--adding final newline
-		outstr = outstr.."];\n"
+		outstr = outstr .. "];\n"
 	end
 	--write out connections
-	for _, edge in ipairs(self.edges) do 
-		outstr = outstr..'\t'..edge.src.name.." -> "..edge.dest.name..";\n"
+	for _, edge in ipairs(self.edges) do
+		outstr = outstr .. '\t' .. edge.src.name .. " -> " .. edge.dest.name .. ";\n"
 	end
-	outstr = outstr.."}"
+	outstr = outstr .. "}"
 	outfile:write(outstr)
 	outfile:close()
-	print(filename.." created")
+	print(filename .. " created")
 end
 
 function GraphPrototype:addEdges(edges)
 	for _, edge in ipairs(edges) do
 		if not self:edgeExists(edge) then
 			-- Look up the source and destination graphnode by name.
-			print("Trying to add edge: "..edge.srcname.." "..#edge.srcname)
+			-- print("Trying to add edge: "..edge.srcname.." "..#edge.srcname)
 			assert(self.nodes[edge.srcname], "Source name of edge unknown!")
 			edge.src = self.nodes[edge.srcname]
 
@@ -309,12 +309,15 @@ function GraphPrototype:addEdges(edges)
 			-- We add this edge to our list of edges.
 			table.insert(self.edges, edge)
 
+			--TODO: Hack - need to tell edge object radius of src geometry for arrows
+			edge.src_radius = self.nodes[1].radius
+
 			-- Visualization
 			edge:createOSG()
 			self.osg.edgeroot:addChild(edge.osg)
-			print("Graph: Added DirectedEdge from", edge.srcname, "to", edge.destname)
+			-- print("Graph: Added DirectedEdge from", edge.srcname, "to", edge.destname)
 		else
-			print("Edge ",edge.srcname," to ",edge.destname," Already Exists")
+			print("Edge ", edge.srcname, " to ", edge.destname, " Already Exists")
 		end
 	end
 end

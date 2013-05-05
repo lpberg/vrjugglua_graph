@@ -22,24 +22,25 @@ function DirectedEdgeIndex:createOSG()
 	--set up directedEdge variables
 	self.srcpos = self.src.position
 	self.destpos = self.dest.position
-	
+
 	--create "label" object
 	self.labelSwitch = osg.Switch()
 	self.labelSwitch:addChild(TextLabel(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)), self.label, self.fontsize, self.radius, self.fontcolor))
 	--hiding label by default
 	self.labelSwitch:setAllChildrenOff()
 	--normal edge osg
-	self.osgcylinder = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius,self.color)
+
+	self.osgcylinder = CylinderFromHereToThereWithArrows{here = Vec(unpack(self.srcpos)), there = Vec(unpack(self.destpos)), radius = self.radius, color = self.color, node_radius = self.src_radius}
 	--create a edge controller switch
 	self.edge_control_switch = osg.Switch()
 	self.osg_elements = Transform{
-							self.osgcylinder,
-							self.labelSwitch
-						}
+		self.osgcylinder,
+		self.labelSwitch
+	}
 	--create transparent groups
-	self.transparent_low = TransparentGroup{alpha=.25}
-	self.transparent_high = TransparentGroup{alpha=.75}
-	self.transparent_custom = TransparentGroup{alpha=self.transparent_custom or .25}
+	self.transparent_low = TransparentGroup{alpha = .25}
+	self.transparent_high = TransparentGroup{alpha = .75}
+	self.transparent_custom = TransparentGroup{alpha = self.transparent_custom or .25}
 	--add osg_elements to tranparent groups
 	self.transparent_low:addChild(self.osg_elements)
 	self.transparent_high:addChild(self.osg_elements)
@@ -49,10 +50,10 @@ function DirectedEdgeIndex:createOSG()
 	self.edge_control_switch:addChild(self.transparent_low)
 	self.edge_control_switch:addChild(self.transparent_high)
 	self.edge_control_switch:addChild(self.transparent_custom)
-	
+
 	--create switch for indicator
 	self.indicators = osg.Switch()
-	local highlighted_cylinder = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius*1.1,self.highlightColor)
+	local highlighted_cylinder = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)), self.radius * 1.1, self.highlightColor)
 	self.indicators:addChild(highlighted_cylinder)
 	--highlight off by default
 	self.indicators:setAllChildrenOff()
@@ -82,20 +83,20 @@ function DirectedEdgeIndex:updateOSG()
 	self.srcpos = self.src.position
 	self.destpos = self.dest.position
 	-- update label graphic
-	self.osg_elements.Child[2].Child[1] = TextLabel(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.label,self.fontsize,self.radius,self.fontcolor)
+	self.osg_elements.Child[2].Child[1] = TextLabel(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)), self.label, self.fontsize, self.radius, self.fontcolor)
 	--update normal edge graphic
-	self.osg_elements.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius,self.color)
+	self.osg_elements.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)), self.radius, self.color)
 	--update highlighted edge graphic
-	self.indicators.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius*1.1,self.highlightColor)
+	self.indicators.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)), self.radius * 1.1, self.highlightColor)
 	-- self.indicators.Child[2] = HighlightCylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)),self.radius,self.highlightColor)
 end
 
 function DirectedEdgeIndex:shrinkEdge()
-	self.radius = self.radius/2
+	self.radius = self.radius / 2
 	self:updateOSG()
 end
 function DirectedEdgeIndex:expandEdge()
-	self.radius = self.radius*2
+	self.radius = self.radius * 2
 	self:updateOSG()
 end
 
@@ -118,18 +119,19 @@ function DirectedEdgeIndex:hideLabel()
 	self.labelSwitch:setAllChildrenOff()
 end
 
-DirectedEdge = function(source, destination,args)
+DirectedEdge = function(source, destination, args)
 	-- setmetatable returns the table it is given after it modifies it by setting the metatable
 	-- so this is a commonly-seen pattern
 	local _radius = 0.007
-	local _color = {(105/255),(105/255),(105/255),1} --gray color default
-	local _fontcolor = {1,1,1,1}
-	local _highlightColor = {1,1,0,1}
+	local _color = {(105 / 255), (105 / 255), (105 / 255), 1} --gray color default
+	local _fontcolor = {1, 1, 1, 1}
+	local _highlightColor = {1, 1, 0, 1}
 	local _label = ""
 	local _fontsize = .25
 	local _destColor = nil
 
 	if args ~= nil then
+		_src_radius = args.src_radius or _radius
 		_radius = args.radius or _radius
 		_color = args.color or _color
 		_fontcolor = args.fontcolor or _fontcolor
@@ -138,15 +140,16 @@ DirectedEdge = function(source, destination,args)
 		_destColor = args.destColor or _destColor
 		_highlightColor = args.highlightColor or _highlightColor
 	end
-	
-	return setmetatable({srcname = source, 
-						 destname = destination, 
-						 radius = _radius, 
-						 color = _color, 
-						 destColor = _destColor, 
-						 fontcolor = _fontcolor, 
-						 fontsize = _fontsize, 
-						 label = _label, 
-						 highlightColor = _highlightColor
-						 }, DEMT)
+
+	return setmetatable({srcname = source,
+			destname = destination,
+			src_radius = _src_radius,
+			radius = _radius,
+			color = _color,
+			destColor = _destColor,
+			fontcolor = _fontcolor,
+			fontsize = _fontsize,
+			label = _label,
+			highlightColor = _highlightColor
+		}, DEMT)
 end
