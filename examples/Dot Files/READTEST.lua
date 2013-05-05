@@ -9,11 +9,11 @@ runfile([[readInDOT.lua]])
 
 -- g = Graph(
 -- {
-	-- ["b0"] = GraphNode{position = {2,10,0}};
-	-- ["b1"] = GraphNode{position = {1.5,9,0}};
-	-- ["b2"] = GraphNode{position = {2.5,9,0}};
-	-- ["b3"] = GraphNode{position = {2.5,8,0}};
-	-- ["b4"] = GraphNode{position = {1.5,8,0}};
+	-- ["b0"] = GraphNode{position = {2,1,0}};
+	-- ["b1"] = GraphNode{position = {1.5,-.5,0}};
+	-- ["b2"] = GraphNode{position = {2.5,-.5,0}};
+	-- ["b3"] = GraphNode{position = {2.5,-1,0}};
+	-- ["b4"] = GraphNode{position = {1.5,-1,0}};
 
 -- },
 -- {
@@ -34,23 +34,23 @@ local purple = {(138/255),(43/255),(210/255),1}
 local blue = {0,0,1,1}
 g = Graph(
 	{
-		--x = 0
+		-- x = 0
 		["012345"] = GraphNode{position = {0,0,0},radius = .03};
 		["01234"] = GraphNode{position = {0,-1*fact,0},radius = .03,color = red}; 
 		["0123"] = GraphNode{position = {0,-2*fact,0},radius = .03,color = teal};
 		["12"] = GraphNode{position = {0,-4*fact,0},radius = .03,color = purple}; 
 		["1"] = GraphNode{position = {0,-5*fact,0},radius = .03,color = green}; 
 		["2"] = GraphNode{position = {.1,-6*fact,fact},radius = .03,color = blue}; 
-		--x = 1
+		-- x = 1
 		["012"] = GraphNode{position = {1*fact,-3*fact,0},radius = .03,color = purple}; 
 		["02"] = GraphNode{position = {1*fact,-4*fact,0},radius = .03,color = yellow}; 
-		--x = 2
+		-- x = 2
 		["01"] = GraphNode{position = {2*fact,-4*fact,0},radius = .03,color = green}; 
 		["0"] = GraphNode{position = {2*fact,-5*fact,0},radius = .03,color = yellow};
-		--x = -1
+		-- x = -1
 		["123"] = GraphNode{position = {-1*fact,-3*fact,0},radius = .03,color = blue};
 		["23"] = GraphNode{position = {-1*fact,-4*fact,0},radius = .03,color = yellow}; 
-		--x = -2
+		-- x = -2
 		["13"] = GraphNode{position = {-2*fact,-4*fact,0},radius = .03,color = green};
 		["3"] = GraphNode{position = {-2*fact,-5*fact,0},radius = .03,color = yellow};
 
@@ -85,22 +85,27 @@ local filename = string.match(getScriptFilename(), "(.-)([^\\]-([^%.]+))$").."RE
 g:writeOutDotFile(filename)
 
 local function runGraphViz(infile,outfile)
-	os.execute([["C:\Program Files (x86)\Graphviz2.30\bin\dot.exe" ]]..infile..[[ -o ]]..outfile)
+	-- print("out: "..outfile)
+	-- print("in: "..infile)
+	os.execute([["C:\Program Files (x86)\Graphviz2.30\bin\dot.exe" ]]..[["]]..infile..[[" -o "]]..outfile..[["]])
+	print([["C:\Program Files (x86)\Graphviz2.30\bin\dot.exe" ]]..[["]]..infile..[[" -o "]]..outfile..[["]])
 end
 
-local function getImageFromDOT(infile,outfile)
-	os.execute([["C:\Program Files (x86)\Graphviz2.30\bin\dot.exe" -Tpng ]]..infile..[[ -o ]]..outfile)
-end
+-- local function getImageFromDOT(infile,outfile)
+	-- os.execute([["C:\Program Files (x86)\Graphviz2.30\bin\dot.exe" -Tpng ]]..[["]]..infile..[[" -o "]]..outfile..[["]])
+-- end
 
 runGraphViz(filename,filename..[[GVO]])
-getImageFromDOT(filename,filename..[[.png]])
+-- getImageFromDOT(filename,filename..[[.png]])
 
-local newG = readInDotFile(filename..[[GVO]])
+local g2 = readInDotFile(filename..[[GVO]])
 
 function applyGV()
-	for _,node in ipairs(newG.nodes) do
+	for _,node in ipairs(g2.nodes) do
+		print("apply gv: node name = "..node.name)
 		g.nodes[node.name]:setPosition({node.position[1]/500,node.position[2]/500,node.position[3]/500})
 	end
 end
 
--- applyGV()
+
+applyGV()

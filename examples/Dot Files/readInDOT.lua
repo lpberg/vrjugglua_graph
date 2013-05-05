@@ -2,7 +2,6 @@
 require("Actions")
 require("getScriptFilename")
 vrjLua.appendToModelSearchPath(getScriptFilename())
-function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
 
 local lines = {}
 
@@ -44,27 +43,18 @@ local function readInFile(filename)
 end
 
 local function createNode(line,g)
-	node_name = string.gsub(string.sub(line,1,string.find(line," ")), " ", "")
-	start_Idx_of_pos = string.find(line,[[pos="]])
-	tempstr = string.sub(line,start_Idx_of_pos+5,string.find(line,[[;]]))
-	tempstr = string.sub(tempstr,1,string.find(line,[["]]))
-	tempstr = string.sub(tempstr,1,string.find(tempstr,[["]])-1)
-	comma = string.find(tempstr,[[,]])
-	pos_x = string.sub(tempstr,1,comma-1)
-	pos_y = string.sub(tempstr,comma+1,#tempstr)
-	print("NODE: "..node_name.." at ("..pos_x..","..pos_y..")")
-	--INSERT CODE FOR CREATING NODE IN GRAPH
-	g:addNodes({[node_name] = GraphNode{position = {pos_x,pos_y,0},radius = .1};})
+	_,_,node_name = string.find(line,"([%a%d]*)%s*%[",1)
+	node_name = string.gsub(node_name," ","")
+	node_name = string.gsub(node_name,"\t","")
+	_,_,pos_x,pos_y,pos_z = string.find(line,[[pos=%"(%d*),(%d*),?(%d*)%"]])
+	if pos_z == "" then pos_z = 0 end
+	print("NODE: "..node_name.." at ("..pos_x..","..pos_y..","..pos_z..")")
+	--create graph node
+	g:addNodes({[node_name] = GraphNode{position = {pos_x,pos_y,pos_y},radius = .1};})
 end
 
 local function createEdge(line,g)
-	end_Idx_of_Src = string.find(line,"-")-1
-	start_Idx_of_Dest = string.find(line,">")+1
-	end_Idx_of_Dest = string.find(line,"pos")-2
-	node1 = string.sub(line,1,end_Idx_of_Src)
-	node2 = string.sub(line,start_Idx_of_Dest,end_Idx_of_Dest)
-	node1 = string.gsub(node1, " ", "")
-	node2 = string.gsub(node2, " ", "")
+	_,_,node1,node2 = string.find(line,"([%a%d]*)%s*->%s*([%a%d]*)%s*%[")
 	print("EDGE from "..node1.." to "..node2)
 	--INSERT CODE FOR CREATING EDGE IN GRAPH
 	g:addEdges{DirectedEdge(node1, node2);}
@@ -75,10 +65,8 @@ local function createGraph(graph)
 	for v,line in ipairs(lines) do
 		if string.find(line,"digraph ") == nil and string.find(line,"node ") == nil then
 			if string.find(line,"->") then
-				--EDGE STUFF HERE
 				createEdge(line,graph)
 			else
-				--EDGE STUFF HERE
 				createNode(line,graph)
 			end
 		end
