@@ -1,4 +1,4 @@
-local GraphPrototype = {}
+ local GraphPrototype = {}
 local GMT = {__index = GraphPrototype}
 math.randomseed(os.time())
 math.random()
