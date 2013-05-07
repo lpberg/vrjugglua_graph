@@ -6,7 +6,30 @@ function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
 g = nil
 runfile([[..\graph\loadGraphFiles.lua]])
 runfile([[..\graph\simpleLightsGraph.lua]])
+dofile(vrjLua.findInModelSearchPath([[textNode.lua]]))
 
+local node1 = createTextNode{
+	text = "Node1",
+	height = .05,
+}
+local node2 = createTextNode{
+	text = "Node2",
+	height = .05,
+}
+local node3 = createTextNode{
+	text = "Node3",
+	height = .05,
+}
+local node4 = createTextNode{
+	text = "Node4",
+	height = .05,
+}
+local node5 = createTextNode{
+	text = "Node5",
+	height = .05,
+}
+
+-- RelativeTo.World:addChild(my_block1)
 
 -- A graph is G=(V, E)
 g = Graph(
@@ -14,15 +37,15 @@ g = Graph(
 		["one"] = GraphNode{position = {1, 1, 0}, radius = .1};
 		["two"] = GraphNode{position = {.75, .5, 0}, radius = .1};
 		["three"] = GraphNode{position = {1.1, .5, 0}, radius = .1};
-		["four"] = GraphNode{position = {.41, .1, 0}, radius = .1};
-		["five"] = GraphNode{position = {1.2, .1, 0}, radius = .1};
+		["four"] = GraphNode{position = {.41, .1, 0}, radius = .05,custom_osg = node4};
+		["five"] = GraphNode{position = {1.2, .1, 0}, radius = .05,custom_osg = node5};
 	},
 	{
-		DirectedEdge("one", "two", {labeltext = ""});
-		DirectedEdge("one", "three", {labeltext = ""});
-		DirectedEdge("three", "four", {labeltext = ""});
-		DirectedEdge("three", "five", {labeltext = ""});
-		DirectedEdge("two", "four", {labeltext = ""});
+		DirectedEdge("one", "two", {labeltext = "",color={1,1,0,1}});
+		DirectedEdge("one", "three", {labeltext = "",color={1,1,0,1}});
+		DirectedEdge("three", "four", {labeltext = "",color={1,1,0,1}});
+		DirectedEdge("three", "five", {labeltext = "",color={1,1,0,1}});
+		DirectedEdge("two", "four", {labeltext = "",color={1,1,0,1}});
 	}
 )
 
