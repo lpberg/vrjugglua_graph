@@ -21,9 +21,8 @@ function GraphPrototype:addNodes(nodes)
 end
 
 function GraphPrototype:getNodesAndEdgesFromPath(args)
-	-- print("calling getNodesAndEdgesFromPath...")
 	local items = {}
-	for x, n in ipairs(args) do
+	for _, n in ipairs(args) do
 		table.insert(items, self.nodes[n])
 	end
 	for k, v in ipairs(args) do
@@ -36,9 +35,8 @@ function GraphPrototype:getNodesAndEdgesFromPath(args)
 end
 
 function GraphPrototype:setTransparencyForPath(args)
-	-- print("calling setTransparencyForPath...")
-	items = self:getNodesAndEdgesFromPath(args)
-	for z, b in ipairs(items) do
+	local nodes_and_edges = self:getNodesAndEdgesFromPath(args)
+	for _, b in ipairs(nodes_and_edges) do
 		b:setHighTransparency()
 	end
 end
@@ -78,20 +76,20 @@ function GraphPrototype:updateHighlightedPath()
 end
 
 function GraphPrototype:printCurrentPath()
-	for _, v in ipairs(self.currentPath) do
-		print(v)
+	for _, node in ipairs(self.currentPath) do
+		print(node)
 	end
 end
 
-function GraphPrototype:updateColorOfChildren(name)
-	local node = self.nodes[name]
-	for _, child in ipairs(node.children) do
-		local edgeOfInterest = self:getEdge(name, child.name)
-		if (edgeOfInterest.destColor ~= nil) then
-			child:setColor(edgeOfInterest.destColor)
-		end
-	end
-end
+-- function GraphPrototype:updateColorOfChildren(name)
+	-- local node = self.nodes[name]
+	-- for _, child in ipairs(node.children) do
+		-- local edgeOfInterest = self:getEdge(name, child.name)
+		-- if (edgeOfInterest.destColor ~= nil) then
+			-- child:setColor(edgeOfInterest.destColor)
+		-- end
+	-- end
+-- end
 
 -- function GraphPrototype:DFSLowTransparencyGraph(state_name)
 -- root = self.nodes[state_name]
@@ -151,11 +149,10 @@ function GraphPrototype:updateCurrentState(state_name)
 		--enable: show labels on child edges
 		--self:showLabelsOnChildrenEdges(state_name)
 
-		--Else, if current path has stuff in it 
+	--Else, if current path is not empty 
 	else
 		--disable all node highlighting
 		self:disableNodeHighlighting()
-
 		--iterate through current path table to see if we went backwards 'up' the graph to a previous state
 		local currentStateFound = false
 		for idx, stateName in ipairs(self.currentPath) do
@@ -176,7 +173,7 @@ function GraphPrototype:updateCurrentState(state_name)
 		--update the visualization for the highlighted path
 		self:updateHighlightedPath()
 		--updated the color of the children nodes according to 'dest'
-		self:updateColorOfChildren(state_name)
+		-- self:updateColorOfChildren(state_name)
 		--show the labels for the current nodes children only
 		--self:showLabelsOnChildrenEdges(state_name)
 		--update transparency - not in use right now
@@ -190,26 +187,26 @@ function GraphPrototype:getEdge(srcname, destname)
 			return edge
 		end
 	end
-
-	if (self.nodes[srcname] ~= nil and self.nodes[destname] ~= nil) then
-		print("edge not found in graph...creating one..")
-		local myNodeRadius = self.nodes[1].radius or .01
-		self:addEdges({DirectedEdge(srcname, destname, {radius = (myNodeRadius / (8))})})
-		return self:getEdge(srcname, desname)
-	else
-		print("could not create edge as one or both of node names are not currently nodes")
-	end
-
+	print("Graph:getEdge - Edge Not Found")
+	return nil
+	-- if (self.nodes[srcname] ~= nil and self.nodes[destname] ~= nil) then
+		-- print("edge not found in graph...creating one..")
+		-- local myNodeRadius = self.nodes[1].radius or .01
+		-- self:addEdges({DirectedEdge(srcname, destname, {radius = (myNodeRadius / (8))})})
+		-- return self:getEdge(srcname, desname)
+	-- else
+		-- print("could not create edge as one or both of node names are not currently nodes")
+	-- end
 end
 
 function GraphPrototype:getNode(nodename)
-	local retNode = nil
 	for _, node in ipairs(self.nodes) do
 		if node.name == nodename then
-			retNode = node
+			return node
 		end
 	end
-	return retNode
+	print("Graph:getNode - Node Not Found")
+	return nil
 end
 
 function GraphPrototype:getNodeWithChildren(nodename)
@@ -223,43 +220,31 @@ function GraphPrototype:getNodeWithChildren(nodename)
 end
 
 function GraphPrototype:edgeExists(newedge)
-	local found = false
 	for _, edge in ipairs(self.edges) do
 		if edge.srcname == newedge.srcname and edge.destname == newedge.destname then
-			found = true
+			return true
 		end
 	end
-	return found
+	return false
 end
+
 function GraphPrototype:showLabelsOnChildrenEdges(state_name)
 	for _, child in ipairs(self.nodes[state_name].children) do
 		local edge = self:getEdge(state_name, child.name)
 		edge:showLabel()
 	end
 end
+
 function GraphPrototype:hideLabelsOnChildrenEdges(state_name)
 	for _, child in ipairs(self.nodes[state_name].children) do
 		local edge = self:getEdge(state_name, child.name)
 		edge:hideLabel()
 	end
 end
+
 function GraphPrototype:hideAllEdgeLabels()
 	for _, edge in ipairs(self.edges) do
 		edge:hideLabel()
-	end
-end
-
-function Hex2RGB(sHexString)
-	if String.Length(sHexString) ~= 6 then
-		return 0, 0, 0
-	else
-		red = String.Left(sHexString, 2)
-		green = String.Mid(sHexString, 3, 2)
-		blue = String.Right(sHexString, 2)
-		red = tonumber(red, 16) .. "";
-		green = tonumber(green, 16) .. "";
-		blue = tonumber(blue, 16) .. "";
-		return red, green, blue
 	end
 end
 
@@ -291,11 +276,10 @@ function GraphPrototype:addEdges(edges)
 	for _, edge in ipairs(edges) do
 		if not self:edgeExists(edge) then
 			-- Look up the source and destination graphnode by name.
-			-- print("Trying to add edge: "..edge.srcname.." "..#edge.srcname)
-			assert(self.nodes[edge.srcname], "Source name of edge unknown!")
+			assert(self.nodes[edge.srcname], "Graph:addEdges - Source name of edge unknown!")
 			edge.src = self.nodes[edge.srcname]
 
-			assert(self.nodes[edge.destname], "Destination name of edge unknown!")
+			assert(self.nodes[edge.destname], "Graph:addEdges - Destination name of edge unknown!")
 			edge.dest = self.nodes[edge.destname]
 
 			-- The source node is told about this edge and its child
@@ -310,14 +294,15 @@ function GraphPrototype:addEdges(edges)
 			table.insert(self.edges, edge)
 
 			--TODO: Hack - need to tell edge object radius of src geometry for arrows
-			edge.src_radius = self.nodes[1].radius
+			-- edge.src_radius = edge.src_radius or self.nodes[1].radius
+			edge.src_radius = edge.src_radius or edge.dest.radius
 
 			-- Visualization
 			edge:createOSG()
 			self.osg.edgeroot:addChild(edge.osg)
-			-- print("Graph: Added DirectedEdge from", edge.srcname, "to", edge.destname)
+			print("Graph:addEdges -  Added DirectedEdge from", edge.srcname, "to", edge.destname)
 		else
-			print("Edge ", edge.srcname, " to ", edge.destname, " Already Exists")
+			print("Graph:addEdges - Edge ", edge.srcname, " to ", edge.destname, " Already Exists")
 		end
 	end
 end
