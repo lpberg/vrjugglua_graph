@@ -83,6 +83,7 @@ end
 
 GraphNode = function(node)
 	node.isHighlighted = false
+	node.position = node.position or {0,0,0}
 	node.label = node.label or node.labeltext or "default_label" --not implemented
 	node.fontcolor = node.fontcolor or {1,1,1,1} --not implemented
 	node.radius = node.radius or 0.125
