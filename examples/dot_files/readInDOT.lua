@@ -43,21 +43,21 @@ local function readInFile(filename)
 end
 
 local function createNode(line,g)
-	_,_,node_name = string.find(line,"([%a%d]*)%s*%[",1)
+	_,_,node_name = string.find(line,"([%w]*)%s*%[",1)
 	node_name = string.gsub(node_name," ","")
 	node_name = string.gsub(node_name,"\t","")
 	_,_,pos_x,pos_y,pos_z = string.find(line,[[pos=%"(%d*),(%d*),?(%d*)%"]])
 	if pos_z == "" then pos_z = 0 end
 	print("NODE: "..node_name.." at ("..pos_x..","..pos_y..","..pos_z..")")
 	--create graph node
-	g:addNodes({[node_name] = GraphNode{position = {pos_x,pos_y,pos_y},radius = .1};})
+	g:addNodes({[node_name] = GraphNode{position = {pos_x,pos_y,pos_y},radius = .01};})
 end
 
 local function createEdge(line,g)
-	_,_,node1,node2 = string.find(line,"([%a%d]*)%s*->%s*([%a%d]*)%s*%[")
+	_,_,node1,node2 = string.find(line,"(%w*)%s*->%s*(%w*)%s*%[")
 	print("EDGE from "..node1.." to "..node2)
 	--INSERT CODE FOR CREATING EDGE IN GRAPH
-	g:addEdges{DirectedEdge(node1, node2);}
+	g:addEdges{DirectedEdge(node1, node2,{});}
 	
 end
 
