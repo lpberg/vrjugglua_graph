@@ -111,8 +111,8 @@ function DirectedEdgeIndex:hideLabel()
 end
 
 DirectedEdge = function(source, destination, args)
-
 	-- _src_radius = args.src_radius or 0.007
+	args = args or {}
 	_radius = args.radius or 0.007
 	_color = args.color or {(105 / 255), (105 / 255), (105 / 255), 1}
 	_fontcolor = args.fontcolor or {1, 1, 1, 1}
