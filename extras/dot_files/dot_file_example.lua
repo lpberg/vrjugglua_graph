@@ -1,3 +1,13 @@
+
+
+-- g:updateCurrentState("one")
+
+-- local filename = string.match(getScriptFilename(), "(.-)([^\\]-([^%.]+))$").."shortGraph"..".dot"
+-- local img_filename = string.match(getScriptFilename(), "(.-)([^\\]-([^%.]+))$").."shortGraph"..".png"
+-- g:writeOutDotFile(filename)
+-- print(img_filename)
+-- os.execute([["C:\Program Files (x86)\Graphviz2.30\bin\dot.exe"]]..[[ -Tpng ]]..filename..[[ -o ]]..img_filename)
+-- print([["C:\Program Files (x86)\Graphviz2.30\bin\dot.exe" ]]..filename..[[ -o ]]..filename..[[im]])
 --See http://www.lua.org/pil/16.html and http://www.lua.org/pil/16.1.html for more information
 require("Actions")
 require("getScriptFilename")

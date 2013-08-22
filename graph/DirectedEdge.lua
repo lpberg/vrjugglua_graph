@@ -11,35 +11,24 @@ function DirectedEdgeIndex:createOSG()
 	self.srcpos = self.src.position
 	self.destpos = self.dest.position
 
-	--create "label" object
+	--create "label" object (off by default)
 	self.labelSwitch = osg.Switch()
 	local edge_label = TextLabel(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)), self.label, self.fontsize, self.radius, self.fontcolor)
 	self.labelSwitch:addChild(edge_label)
-	--hiding label by default
 	self.labelSwitch:setAllChildrenOff()
 	
-	--normal edge osg
+	--create edge geometry
 	self.osgcylinder = CylinderFromHereToThereWithArrows{here = Vec(unpack(self.srcpos)), there = Vec(unpack(self.destpos)), radius = self.radius, color = self.color, node_radius = self.src_radius}
-	--create a edge controller switch
-	self.edge_control_switch = osg.Switch()
-	
+
 	self.osg_elements = Transform{
 		self.osgcylinder,
 		self.labelSwitch
 	}
-	--create transparent groups
-	-- self.transparent_low = TransparentGroup{alpha = .25}
-	-- self.transparent_high = TransparentGroup{alpha = .75}
-	-- self.transparent_custom = TransparentGroup{alpha = self.transparent_custom or .25}
-	-- add osg_elements to tranparent groups
-	-- self.transparent_low:addChild(self.osg_elements)
-	-- self.transparent_high:addChild(self.osg_elements)
-	-- self.transparent_custom:addChild(self.osg_elements)
+
+	--create a edge controller switch
+	self.edge_control_switch = osg.Switch()
 	-- --add children to edge control switch
 	self.edge_control_switch:addChild(self.osg_elements)
-	-- self.edge_control_switch:addChild(self.transparent_low)
-	-- self.edge_control_switch:addChild(self.transparent_high)
-	-- self.edge_control_switch:addChild(self.transparent_custom)
 
 	--create switch for indicator
 	self.indicators = osg.Switch()
@@ -53,18 +42,6 @@ function DirectedEdgeIndex:createOSG()
 		self.edge_control_switch,
 	}
 end
-
--- function DirectedEdgeIndex:setLowTransparency()
-	-- self.edge_control_switch:setSingleChildOn(2)
--- end
-
--- function DirectedEdgeIndex:setHighTransparency()
-	-- self.edge_control_switch:setSingleChildOn(1)
--- end
-
--- function DirectedEdgeIndex:setNoTransparency()
-	-- self.edge_control_switch:setSingleChildOn(0)
--- end
 
 function DirectedEdgeIndex:updateOSG()
 	--only update if src or dest positions have changed
@@ -84,17 +61,8 @@ function DirectedEdgeIndex:updateOSG()
 	self.indicators.Child[1] = CylinderFromHereToThere(Vec(unpack(self.srcpos)), Vec(unpack(self.destpos)), self.radius * 1.1, self.highlightColor)
 end
 
--- function DirectedEdgeIndex:shrinkEdge()
-	-- self.radius = self.radius / 2
-	-- self:updateOSG()
--- end
--- function DirectedEdgeIndex:expandEdge()
-	-- self.radius = self.radius * 2
-	-- self:updateOSG()
--- end
-
 function DirectedEdgeIndex:highlight(val)
-	--TODO: this turns all highlightin on - problem?
+	--TODO: this turns all highlighting on - problem?
 	if val then
 		self.indicators:setAllChildrenOn()
 	else

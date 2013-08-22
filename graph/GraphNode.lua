@@ -13,24 +13,14 @@ function GraphNodeIndex:createOSG()
 	self.osgsphere = self.custom_osg or self.osgsphere
 	
 	self.node_control_switch = osg.Switch()
-	-- self.transparent_low = TransparentGroup{alpha=.25}
-	-- self.transparent_high = TransparentGroup{alpha=.75}
-	-- self.transparent_custom = TransparentGroup{alpha=self.transparent_custom or .25}
-	-- self.transparent_low:addChild(self.osgsphere)
-	-- self.transparent_high:addChild(self.osgsphere)
-	-- self.transparent_custom:addChild(self.osgsphere)
 		
 	self.node_control_switch:addChild(self.osgsphere)
-	-- self.node_control_switch:addChild(self.transparent_low)
-	-- self.node_control_switch:addChild(self.transparent_high)
-	-- self.node_control_switch:addChild(self.transparent_custom)
 	
 	self.node_control_switch:setSingleChildOn(0)
 	
 	--indicator switch used for highlighting nodes
 	self.indicators = osg.Switch()
 	self.indicators:addChild(RedIndicatorSphere(self.radius*1.5))
-	-- self.indicators:addChild(GreenIndicatorSphere(self.radius*2))
 	self.indicators:setValue(0,false)
 	-- self.indicators:setValue(1,false)
 	
@@ -40,16 +30,6 @@ function GraphNodeIndex:createOSG()
 		self.indicators,
 	}
 end
-
--- function GraphNodeIndex:setLowTransparency()
-	-- self.node_control_switch:setSingleChildOn(2)
--- end
--- function GraphNodeIndex:setHighTransparency()
-	-- self.node_control_switch:setSingleChildOn(1)
--- end
--- function GraphNodeIndex:setNoTransparency()
-	-- self.node_control_switch:setSingleChildOn(0)
--- end
 
 function GraphNodeIndex:setColor(color)
 	if self.custom_osg == nil then
@@ -62,11 +42,6 @@ function GraphNodeIndex:highlight(val,indicatorNum)
 	indicatorNum = indicatorNum or 0
 	self.indicators:setValue(indicatorNum,val)
 	self.isHighlighted = val
-	-- if val then
-		-- self.isHighlighted = true
-	-- else
-		-- self.isHighlighted = false
-	-- end
 end
 
 function GraphNodeIndex:setPosition(pos)

@@ -6,15 +6,9 @@ math.random()
 function GraphPrototype:addNodes(nodes)
 	for nodename, node in pairs(nodes) do
 		assert(self.nodes[nodename] == nil, "Node name already used!")
-		-- Add to the graph's nodes table by name
 		self.nodes[nodename] = node
-		-- For fun, let's also keep them in an array-style, too,
-		-- so #(graph.nodes) is useful and you can
-		-- randomly pick a node by generating a number.
 		table.insert(self.nodes, node)
-		-- Tell each node its name, in case it's curious
 		node.name = nodename
-		-- Add the node to the scenegraph
 		self.osg.noderoot:addChild(node.osg)
 		-- print("Graph: Added GraphNode:", node.name)
 	end
