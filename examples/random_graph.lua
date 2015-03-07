@@ -2,10 +2,12 @@ require("Actions")
 require("getScriptFilename")
 vrjLua.appendToModelSearchPath(getScriptFilename())
 function runfile(fn) dofile(vrjLua.findInModelSearchPath(fn)) end
+
 g = nil
+
 runfile([[..\graph\loadGraphFiles.lua]])
 runfile([[..\graph\simpleLightsGraph.lua]])
-runfile([[..\extras\FDG_Layout.lua]])
+-- runfile([[..\extras\FDG_Layout.lua]])
 
 
 local function randomGraph()
@@ -23,7 +25,7 @@ local function randomGraph()
 	local function addRandomNode(graph)
 		local nodename = ("random_%d"):format(randomNodeNum)
 		graph:addNodes{
-			[nodename] = GraphNode{position = {math.random(-1,1), math.random(-1,1), math.random(-1,1)},color=randColor()}
+			[nodename] = GraphNode{position = {math.random(-10,10), math.random(-10,10), math.random(-10,10)},color=randColor()}
 		}
 		randomNodeNum = randomNodeNum + 1
 	end
@@ -34,7 +36,7 @@ local function randomGraph()
 		local toNum = math.random(1, n)
 		if fromNum ~= toNum then
 			graph:addEdges{
-				DirectedEdge(graph.nodes[fromNum].name, graph.nodes[toNum].name,{radius=.1/3, color={1,1,0,1}})
+				DirectedEdge(graph.nodes[fromNum].name, graph.nodes[toNum].name,{radius=.1/3, color=randColor()})
 			}
 		else
 			print "Whoops, rolled the same number twice. Not actually adding an edge."
@@ -42,12 +44,12 @@ local function randomGraph()
 	end
 
 	-- Add some random nodes
-	for i=1,5 do
+	for i=1,1000 do
 		addRandomNode(g)
 	end
 
 	-- Add some random edges
-	for i=1,5 do
+	for i=1,500 do
 		addRandomEdge(g)
 	end
 	return g

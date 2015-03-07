@@ -1,10 +1,14 @@
-require("Actions")
-require("getScriptFilename")
+require("AddAppDirectory")
 require("TransparentGroup")
-vrjLua.appendToModelSearchPath(getScriptFilename())
-dofile(vrjLua.findInModelSearchPath([[..\graph\loadGraphFiles.lua]]))
-dofile(vrjLua.findInModelSearchPath([[MySounds/PlaySound.lua]]))
-dofile(vrjLua.findInModelSearchPath([[..\graph\simpleLightsGraph.lua]]))
+AddAppDirectory()
+
+runfile[[..\graph\loadGraphFiles.lua]]
+runfile[[MySounds/PlaySound.lua]]
+runfile[[..\graph\simpleLightsGraph.lua]]
+
+local device = gadget.PositionInterface("VJWand")
+local addNodeBtn = gadget.DigitalInterface("WMButtonPlus")
+local addEdgeBtn = gadget.DigitalInterface("VJButton1")
 
 local wavPath = vrjLua.findInModelSearchPath("tiny.wav")
 local myWavSound = SoundWav(wavPath)
@@ -13,14 +17,25 @@ local myWavSound2 = SoundWav(wavPath2)
 local wavPath3 = vrjLua.findInModelSearchPath("new.wav")
 local myWavSound3 = SoundWav(wavPath3)
 
-my_radius = .13/2
+local function randomColor()
+	local r = math.random(0,255)/255
+	local b = math.random(0,255)/255
+	local g = math.random(0,255)/255
+	return {r,g,b,1}
+end
 
-g = Graph(
+local function getWandPositionInWorld()
+	return RelativeTo.World:getInverseMatrix():preMult(device.position)
+end
+
+local my_radius = .13/2
+
+local g = Graph(
 	{
-		["one"] = GraphNode{position = {0,0,0},radius = my_radius};
-		["two"] = GraphNode{position = {0,1,0},radius = my_radius};
-		["three"] = GraphNode{position = {1,1,0},radius = my_radius};
-		["four"] = GraphNode{position = {1,0,0},radius = my_radius};
+		["one"] = GraphNode{position = {0,0,0},radius = my_radius,color = randomColor()};
+		["two"] = GraphNode{position = {0,1,0},radius = my_radius,color = randomColor()};
+		["three"] = GraphNode{position = {1,1,0},radius = my_radius,color = randomColor()};
+		["four"] = GraphNode{position = {1,0,0},radius = my_radius,color = randomColor()};
 
 	},
 	{
@@ -29,21 +44,19 @@ g = Graph(
 	}
 )
 RelativeTo.World:addChild(g.osg.root)
-local device = gadget.PositionInterface("VJWand")
 
-
-xform = osg.MatrixTransform()
-xform:addChild(Sphere{radius = .05})
-RelativeTo.World:addChild(xform)
+--LITTLE SPHERE TO FOLLOW WAND
 Actions.addFrameAction(
 	function()
+		wandSphere = osg.MatrixTransform()
+		wandSphere:addChild(Sphere{radius = .05})
+		RelativeTo.World:addChild(wandSphere)
 		while true do
-			mat = xform:getMatrix()
-			mat:setTrans(RelativeTo.World:getInverseMatrix():preMult(device.position))
-			xform:setMatrix(mat)
+			mat = wandSphere:getMatrix()
+			mat:setTrans(getWandPositionInWorld())
+			wandSphere:setMatrix(mat)
 			Actions.waitForRedraw()
 		end
-
 	end
 )
 
@@ -52,11 +65,10 @@ local hoveredNode = nil
 Actions.addFrameAction(
 	function()
 		while true do
-			local device_pos = RelativeTo.World:getInverseMatrix():preMult(device.position)
+			local device_pos = getWandPositionInWorld()
 			local changed_this_time = false
 			for _,node in ipairs(g.nodes) do
 				local distance = (osg.Vec3d(unpack(node.position))-device_pos):length()
-				-- print(distance)
 				if math.abs(distance) < (my_radius*3) then
 					if not node.isHighlighted then
 						node:highlight(true)
@@ -78,36 +90,39 @@ Actions.addFrameAction(
 		end
 	end
 )
+
 --ADD NODE TO SCENE
 Actions.addFrameAction(function()
-	local drawBtn = gadget.DigitalInterface("WMButtonPlus")
 	while true do
 		repeat
 			Actions.waitForRedraw()
-		until drawBtn.justPressed
-		local newPos = RelativeTo.World:getInverseMatrix():preMult(device.position)
+		until addNodeBtn.justPressed
+		local newPos = getWandPositionInWorld()
 		local newName = tostring(newPos:x()+math.random(1,100))
 		g:addNodes{
-			[newName] = GraphNode{position = {newPos:x(),newPos:y(),newPos:z()+.1},radius = my_radius};
+			[newName] = GraphNode{
+							position = {newPos:x(),newPos:y(),newPos:z()+.1},
+							radius = my_radius,
+							color = randomColor()
+						};
 		}
 		myWavSound3:trigger(1)
 	end
 end)	
 
---ADD NODE TO SCENE
+--ADD EDGE TO SCENE
 Actions.addFrameAction(function()
 	local tempXFORM = Transform{}
-	local drawBtn = gadget.DigitalInterface("VJButton1")
 	while true do
 		local pointOne = nil
 		local pointTwo = nil
 		repeat
 			Actions.waitForRedraw()
-		until drawBtn.justPressed
+		until addEdgeBtn.justPressed
 		pointOne = hoveredNode
 		RelativeTo.World:addChild(tempXFORM)
-		while drawBtn.pressed and pointOne ~= nil do 
-			local device_pos = RelativeTo.World:getInverseMatrix():preMult(device.position)
+		while addEdgeBtn.pressed and pointOne ~= nil do 
+			local device_pos = getWandPositionInWorld()
 			tempXFORM.Child[1] = CylinderFromHereToThere(osg.Vec3d(unpack(pointOne.position)), device_pos, pointOne.radius/3, {1,1,0,1}) 
 			Actions.waitForRedraw()
 		end
@@ -117,7 +132,7 @@ Actions.addFrameAction(function()
 		if pointTwo ~= nil and (pointOne.name ~= pointTwo.name) then
 			print("adding edge")
 			g:addEdges{
-				DirectedEdge(pointOne.name, pointTwo.name,{color = {1,1,0,1},radius = pointOne.radius/3})
+				DirectedEdge(pointOne.name, pointTwo.name,{color = randomColor(),radius = pointOne.radius/3})
 			}
 			myWavSound:trigger(1)
 		end
